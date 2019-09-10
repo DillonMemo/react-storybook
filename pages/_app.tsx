@@ -3,7 +3,6 @@ import Head from "next/head";
 import Link from "next/link";
 
 const App = ({ Component }) => {
-  console.log(Component, Component ? true : false);
   return (
     <>
       <Head>
