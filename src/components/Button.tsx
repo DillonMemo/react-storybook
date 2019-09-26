@@ -3,6 +3,7 @@ import React from "react";
 export interface IButtonProps {
   children?: React.ReactNode;
   onClick?: (e: any) => void;
+  styles?: {};
 }
 
 const styles = {
@@ -16,14 +17,14 @@ const styles = {
 };
 
 const Button: React.SFC<IButtonProps> = props => (
-  <button onClick={props.onClick} style={styles} type="button">
+  <button onClick={props.onClick} style={props.styles} type="button">
     {props.children}
   </button>
 );
 
-Button.defaultProps = {
-  children: null,
-  onClick: () => {}
-};
+// Button.defaultProps = {
+//   children: null,
+//   onClick: () => {}
+// };
 
 export default Button;
