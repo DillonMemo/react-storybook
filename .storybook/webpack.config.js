@@ -8,11 +8,13 @@ module.exports = ({ config }) => {
     include: [SRC_PATH, STORIES_PATH],
     use: [
       {
-        loader: require.resolve("awesome-typescript-loader"),
+        loader: require.resolve("@storybook/source-loader"),
+        // loader: require.resolve("awesome-typescript-loader"),
         options: {
           configFileName: "./.storybook/tsconfig.json"
         }
       },
+      { loader: require.resolve("awesome-typescript-loader") },
       { loader: require.resolve("react-docgen-typescript-loader") }
     ]
   });

@@ -1,13 +1,21 @@
-import { checkA11y } from "@storybook/addon-a11y";
 import { storiesOf } from "@storybook/react";
 import * as React from "react";
 import Button from "../src/components/Button";
+import { linkTo } from "@storybook/addon-links";
+import { action } from "@storybook/addon-actions";
 
 storiesOf("Button", module)
-  .addDecorator(checkA11y)
-  .add("with text", () => <Button>Hello Button</Button>)
-  .add("with some emoji", () => (
-    <Button styles={{ backgroundColor: "red", color: "darkRed" }}>
-      😀 😎 👍 💯
-    </Button>
-  ));
+  .add("First", () => (
+    <Button onClick={linkTo("Button", "Second")}>Hello Button</Button>
+  ))
+  .add(
+    "Second",
+    () => (
+      <Button onClick={action("clicked")}>
+        <span role="img" aria-label="so cool">
+          😀 😎 👍 💯
+        </span>
+      </Button>
+    ),
+    { notes: "A very simple component" }
+  );
