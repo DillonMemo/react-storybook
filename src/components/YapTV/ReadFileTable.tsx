@@ -71,9 +71,6 @@ const ReadFileTable: React.FunctionComponent<IProps> = props => {
     }
   };
 
-  console.log("column", columns, typeof columns);
-  console.log("data", data, typeof data);
-
   return (
     <div className={classes.wrapper}>
       <h3 onClick={props.onClick}>{props.children}</h3>

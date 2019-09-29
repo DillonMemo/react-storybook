@@ -1,7 +1,7 @@
 import React from "react";
 import { IconProps } from "@material-ui/core/Icon";
 
-export interface MaterialTableProps<RowData extends object> {
+export interface CustomTableProps<RowData extends object> {
   actions?: (Action<{ RowData }> | ((rowData: RowData) => Action<RowData>))[];
   columns: Column<RowData>[];
   components?: Components;

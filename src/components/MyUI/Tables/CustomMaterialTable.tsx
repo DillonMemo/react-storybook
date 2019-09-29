@@ -1,4 +1,4 @@
-import React, { useState, Children } from "react";
+import React, { useState, Children, useEffect } from "react";
 
 /* Material Table Components */
 import Table from "@material-ui/core/Table";
@@ -7,160 +7,90 @@ import TableRow from "@material-ui/core/TableRow";
 import LinearProgress from "@material-ui/core/LinearProgress";
 
 import { defaultProps } from "./utils/default-props";
-import { MaterialTableProps } from "./utils";
+import { CustomTableProps } from "./utils";
+import DataManager from "./utils/data-manager";
 
-interface IProps<RowData extends object> {
-  columns: Column<RowData>[];
-  data: any;
-}
+const dataManager = new DataManager();
 
-interface Column<RowData extends object> {
-  disableClick?: boolean;
-  field?: keyof RowData;
-  filtering?: boolean;
-  filterPlaceholder?: string;
-  filterCellStyle?: React.CSSProperties;
-  grouping?: boolean;
-  headerStyle?: React.CSSProperties;
-  hidden?: boolean;
-  initialEditValue?: any;
-  lookup?: object;
-  editable?:
-    | "always"
-    | "onUpdate"
-    | "onAdd"
-    | "never"
-    | ((columnDef: Column<RowData>, rowData: RowData) => boolean);
-  removable?: boolean;
-  title?: string | React.ReactElement<any>;
-  type?:
-    | "string"
-    | "boolean"
-    | "numeric"
-    | "date"
-    | "datetime"
-    | "time"
-    | "currency";
-}
+const getProps = (
+  props: React.PropsWithChildren<CustomTableProps<object>>
+): CustomTableProps<object> => {
+  const calculatedProps = { ...props };
+  // calculatedProps.components = { ...CustomMaterialTable.defaultProps.components, ...calculatedProps.components};
+  console.log("calculatedProps", calculatedProps);
 
-export default (props: any) => (
-  <CustomMaterialTable {...props} ref={props.tableRef} />
-);
+  if (calculatedProps.editable) {
+    // 행 추가 이벤트
+    if (calculatedProps.editable.onRowAdd) {
+      // ...
+    }
+  }
 
-const CustomMaterialTable: React.FunctionComponent<IProps<object>> = props => {
-  console.log("props", props);
+  return calculatedProps;
+};
+
+const isRemoteData = (
+  props: React.PropsWithChildren<CustomTableProps<object>>
+) => !Array.isArray(props.data);
+
+/**
+ *
+ * @param props - 컴포넌트 props
+ * @param isInit - Paging, Order init 여부
+ */
+const setDataManagerFields = (
+  props: React.PropsWithChildren<CustomTableProps<object>>,
+  isInit: boolean
+): void => {
+  let defaultSortColumnIndex: number = -1;
+  let defaultSortDirection: string | undefined = "";
+
+  if (props) {
+    defaultSortColumnIndex = props.columns.findIndex(a => a.defaultSort);
+    defaultSortDirection =
+      defaultSortColumnIndex > -1
+        ? props.columns[defaultSortColumnIndex].defaultSort
+        : "";
+  }
+
+  // Set Column
+  dataManager.setColumns(props.columns);
+  debugger;
+  if (isRemoteData(props)) {
+  } else {
+    dataManager.setData(props.data);
+  }
+};
+
+const CustomMaterialTable: React.FunctionComponent<
+  CustomTableProps<object>
+> = props => {
+  const calculatedProps = getProps(props);
+  setDataManagerFields(calculatedProps, true);
+  // const renderState = dataManager.getRenderState();
+
+  const [data, setData] = useState<any[]>([]);
+  const [renderState, setRenderState] = useState<CustomTableProps<object>>({
+    ...dataManager.getRenderState()
+  });
+  const [showAddRow, setShowAddRow] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   setRenderState(dataManager.getRenderState());
+  // }, [renderState]);
+
+  console.log("renderState", renderState.columns);
+
   return (
     <div>
       <h1>Custom Material Table</h1>
+      {/* <props.components.Container style={{position: 'relative', ...props.style}}></props.components.Container> */}
     </div>
   );
 };
 
 CustomMaterialTable.defaultProps = defaultProps;
 
-// export default CustomMaterialTable;
-
-// const test = ((props: MaterialTableProps)=> <CustomMaterialTable {...props} ref={props.tableRef} />)
-
-// const Demo = () => {
-//   const [data, setData] = useState([
-//     {
-//       id: 1,
-//       name: "A1",
-//       surname: "B",
-//       isMarried: true,
-//       birthDate: new Date(1987, 1, 1),
-//       birthCity: 0,
-//       sex: "Male",
-//       type: "adult",
-//       insertDateTime: new Date(2018, 1, 1, 12, 23, 44),
-//       time: new Date(1900, 1, 1, 14, 23, 35)
-//     },
-//     {
-//       id: 2,
-//       name: "A2",
-//       surname: "B",
-//       isMarried: false,
-//       birthDate: new Date(1987, 1, 1),
-//       birthCity: 34,
-//       sex: "Female",
-//       type: "adult",
-//       insertDateTime: new Date(2018, 1, 1, 12, 23, 44),
-//       time: new Date(1900, 1, 1, 14, 23, 35),
-//       parentId: 1
-//     },
-//     {
-//       id: 3,
-//       name: "A3",
-//       surname: "B",
-//       isMarried: true,
-//       birthDate: new Date(1987, 1, 1),
-//       birthCity: 34,
-//       sex: "Female",
-//       type: "child",
-//       insertDateTime: new Date(2018, 1, 1, 12, 23, 44),
-//       time: new Date(1900, 1, 1, 14, 23, 35),
-//       parentId: 1
-//     },
-//     {
-//       id: 4,
-//       name: "A4",
-//       surname: "Dede",
-//       isMarried: true,
-//       birthDate: new Date(1987, 1, 1),
-//       birthCity: 34,
-//       sex: "Female",
-//       type: "child",
-//       insertDateTime: new Date(2018, 1, 1, 12, 23, 44),
-//       time: new Date(1900, 1, 1, 14, 23, 35),
-//       parentId: 3
-//     },
-//     {
-//       id: 5,
-//       name: "A5",
-//       surname: "C",
-//       isMarried: false,
-//       birthDate: new Date(1987, 1, 1),
-//       birthCity: 34,
-//       sex: "Female",
-//       type: "child",
-//       insertDateTime: new Date(2018, 1, 1, 12, 23, 44),
-//       time: new Date(1900, 1, 1, 14, 23, 35)
-//     },
-//     {
-//       id: 6,
-//       name: "A6",
-//       surname: "C",
-//       isMarried: true,
-//       birthDate: new Date(1989, 1, 1),
-//       birthCity: 34,
-//       sex: "Female",
-//       type: "child",
-//       insertDateTime: new Date(2018, 1, 1, 12, 23, 44),
-//       time: new Date(1900, 1, 1, 14, 23, 35),
-//       parentId: 5
-//     }
-//   ]);
-
-//   const [columns, setColumns] = useState([
-//     { title: "Adı", field: "name", filterPlaceholder: "Adı filter" },
-//     { title: "Soyadı", field: "surname", initialEditValue: "test" },
-//     { title: "Evli", field: "isMarried", type: "boolean" },
-//     { title: "Cinsiyet", field: "sex", disableClick: true, editable: "onAdd" },
-//     { title: "Tipi", field: "type", removable: false, editable: "never" },
-//     { title: "Doğum Yılı", field: "birthDate", type: "date" },
-//     {
-//       title: "Doğum Yeri",
-//       field: "birthCity",
-//       lookup: { 34: "İstanbul", 0: "Şanlıurfa" }
-//     },
-//     { title: "Kayıt Tarihi", field: "insertDateTime", type: "datetime" },
-//     { title: "Zaman", field: "time", type: "time" }
-//   ]);
-
-//   return (
-//     <div>
-//       <CustomMaterialTable columns={columns} data={data} />
-//     </div>
-//   );
-// };
+export default (props: any) => (
+  <CustomMaterialTable {...props} ref={props.tableRef} />
+);
