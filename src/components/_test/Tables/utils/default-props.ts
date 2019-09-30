@@ -19,6 +19,7 @@ export const defaultProps: IProps<object> = {
     }
   },
   options: {
+    emptyRowsWhenPaging: true,
     header: true,
     padding: "default",
     paging: false,

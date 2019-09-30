@@ -11,7 +11,7 @@ const TestTable: React.FunctionComponent<IProps<object>> = props => {
 
   const [columns, setColumns] = useState(setColumnsManager(props.columns));
   const [originalData, setOriginalData] = useState(
-    isRemoteData(props) && setDataManager(props.data)
+    isRemoteData(props) ? [] : setDataManager(props.data)
   );
 
   return (

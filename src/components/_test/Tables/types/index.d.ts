@@ -23,7 +23,14 @@ export interface Column<RowData extends object> {
     id: number;
   };
   title?: string | React.ReactElement<any>;
-  type?: "string" | "boolean" | "numeric" | "date" | "datetime" | "time" | "currency";
+  type?:
+    | "string"
+    | "boolean"
+    | "numeric"
+    | "date"
+    | "datetime"
+    | "time"
+    | "currency";
 }
 
 export interface Components {
@@ -44,6 +51,7 @@ export interface Localization {
   };
 }
 export interface Options {
+  emptyRowsWhenPaging?: boolean;
   header?: boolean;
   padding?: "default" | "dense";
   paging?: boolean;
