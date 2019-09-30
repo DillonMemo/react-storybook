@@ -6,6 +6,9 @@ export const defaultProps = {
     Header: MTableHeader
     // Body: MComponents.MTableBody,
   },
+  options: {
+    header: true
+  },
   data: [],
   style: {}
 };

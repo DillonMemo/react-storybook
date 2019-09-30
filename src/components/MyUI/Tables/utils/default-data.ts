@@ -78,17 +78,32 @@ export const data = [
 ];
 
 export const columns = [
-  { title: "Adı", field: "name", filterPlaceholder: "Adı filter" },
-  { title: "Soyadı", field: "surname", initialEditValue: "test" },
+  { title: "Adı", field: "name" },
+  { title: "Soyadı", field: "surname" },
   { title: "Evli", field: "isMarried", type: "boolean" },
-  { title: "Cinsiyet", field: "sex", disableClick: true, editable: "onAdd" },
-  { title: "Tipi", field: "type", removable: false, editable: "never" },
+  { title: "Cinsiyet", field: "sex" },
+  { title: "Tipi", field: "type" },
   { title: "Doğum Yılı", field: "birthDate", type: "date" },
   {
     title: "Doğum Yeri",
-    field: "birthCity",
-    lookup: { 34: "İstanbul", 0: "Şanlıurfa" }
+    field: "birthCity"
   },
   { title: "Kayıt Tarihi", field: "insertDateTime", type: "datetime" },
   { title: "Zaman", field: "time", type: "time" }
 ];
+
+// export const columns = [
+//   { title: "Adı", field: "name", filterPlaceholder: "Adı filter" },
+//   { title: "Soyadı", field: "surname", initialEditValue: "test" },
+//   { title: "Evli", field: "isMarried", type: "boolean" },
+//   { title: "Cinsiyet", field: "sex", disableClick: true, editable: "onAdd" },
+//   { title: "Tipi", field: "type", removable: false, editable: "never" },
+//   { title: "Doğum Yılı", field: "birthDate", type: "date" },
+//   {
+//     title: "Doğum Yeri",
+//     field: "birthCity",
+//     lookup: { 34: "İstanbul", 0: "Şanlıurfa" }
+//   },
+//   { title: "Kayıt Tarihi", field: "insertDateTime", type: "datetime" },
+//   { title: "Zaman", field: "time", type: "time" }
+// ];

@@ -16,8 +16,19 @@ const getProps = (
   props: React.PropsWithChildren<CustomTableProps<object>>
 ): CustomTableProps<object> => {
   const calculatedProps = { ...props };
-  // calculatedProps.components = { ...CustomMaterialTable.defaultProps.components, ...calculatedProps.components};
+
+  if (CustomMaterialTable.defaultProps) {
+    calculatedProps.components = {
+      ...CustomMaterialTable.defaultProps.components,
+      ...calculatedProps.components
+    };
+  }
+
   console.log("calculatedProps", calculatedProps);
+  console.log(
+    "CustomMaterialTable.defaultProps",
+    CustomMaterialTable.defaultProps
+  );
 
   if (calculatedProps.editable) {
     // 행 추가 이벤트
@@ -29,6 +40,10 @@ const getProps = (
   return calculatedProps;
 };
 
+/**
+ * props.data가 배열이면 false 배열이 아니면 true를 반환
+ * @param props
+ */
 const isRemoteData = (
   props: React.PropsWithChildren<CustomTableProps<object>>
 ) => !Array.isArray(props.data);
@@ -55,7 +70,7 @@ const setDataManagerFields = (
 
   // Set Column
   dataManager.setColumns(props.columns);
-  debugger;
+
   if (isRemoteData(props)) {
   } else {
     dataManager.setData(props.data);
@@ -67,7 +82,6 @@ const CustomMaterialTable: React.FunctionComponent<
 > = props => {
   const calculatedProps = getProps(props);
   setDataManagerFields(calculatedProps, true);
-  // const renderState = dataManager.getRenderState();
 
   const [data, setData] = useState<any[]>([]);
   const [renderState, setRenderState] = useState<CustomTableProps<object>>({
@@ -75,15 +89,13 @@ const CustomMaterialTable: React.FunctionComponent<
   });
   const [showAddRow, setShowAddRow] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   setRenderState(dataManager.getRenderState());
-  // }, [renderState]);
-
   console.log("renderState", renderState.columns);
+  console.log(props.options);
 
   return (
     <div>
-      <h1>Custom Material Table</h1>
+      <h1>Custom YapTV Edit Table Lib</h1>
+      <Table></Table>
       {/* <props.components.Container style={{position: 'relative', ...props.style}}></props.components.Container> */}
     </div>
   );
