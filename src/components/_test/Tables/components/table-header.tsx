@@ -11,11 +11,10 @@ interface IProps {
 
 const Table_Header: React.FunctionComponent<IProps> = props => {
   console.log("TableHeader props", props);
-  const [header, setHeader] = useState();
 
-  useEffect(() => {
-    setHeader(renderHeader());
-  }, []);
+  // useEffect(() => {
+  //   setHeader(renderHeader());
+  // }, []);
 
   const renderHeader = (): JSX.Element[] => {
     /// Filter 여부 확인 후 Sorting(default: columnOrder를 기준으로 ASC) 그다음 elements 생성
@@ -51,6 +50,8 @@ const Table_Header: React.FunctionComponent<IProps> = props => {
 
     return mapArr;
   };
+
+  const [header, setHeader] = useState(renderHeader());
 
   return (
     <TableHead>

@@ -1,11 +1,13 @@
-import { Table_Header, Table_Body } from "../components";
+import { Table_Header, Table_Body, Table_Body_Row, Table_Cell } from "../components";
 import { IProps } from "../types";
 
 export const defaultProps: IProps<object> = {
   columns: [],
   components: {
-    Header: Table_Header,
-    Body: Table_Body
+    Body: Table_Body,
+    BodyRow: Table_Body_Row,
+    Cell: Table_Cell,
+    Header: Table_Header
   },
   data: [],
   localization: {

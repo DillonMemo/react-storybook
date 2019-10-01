@@ -8,6 +8,11 @@ export interface IProps<RowData extends object> {
     | (DetailPanel<RowData> | ((rowData: RowData) => DetailPanel<RowData>))[];
   localization?: Localization;
   options?: Options;
+  onRowClick?: (
+    event?: React.MouseEvent,
+    rowData?: RowData,
+    toggleDetailPanel?: (panelIndex?: number) => void
+  ) => void;
   stickyHeader?: boolean;
 }
 
@@ -23,18 +28,13 @@ export interface Column<RowData extends object> {
     id: number;
   };
   title?: string | React.ReactElement<any>;
-  type?:
-    | "string"
-    | "boolean"
-    | "numeric"
-    | "date"
-    | "datetime"
-    | "time"
-    | "currency";
+  type?: "string" | "boolean" | "numeric" | "date" | "datetime" | "time" | "currency";
 }
 
 export interface Components {
   Body?: React.ComponentType<any> | React.FunctionComponent<any> | any;
+  BodyRow?: React.ComponentType<any> | React.FunctionComponent<any> | any;
+  Cell?: React.ComponentType<any> | React.FunctionComponent<any> | any;
   Header?: React.ComponentType<any> | React.FunctionComponent<any> | any;
 }
 export interface Localization {
@@ -53,6 +53,7 @@ export interface Localization {
 export interface Options {
   emptyRowsWhenPaging?: boolean;
   header?: boolean;
+  maxBodyHeight?: number | string;
   padding?: "default" | "dense";
   paging?: boolean;
   pageSize?: number;

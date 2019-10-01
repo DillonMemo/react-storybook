@@ -17,6 +17,13 @@ storiesOf("MY Tables", module)
   )
   .add("Custom Test Table", () => (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <TestTable columns={columns} data={data} stickyHeader />
+      <TestTable
+        columns={columns}
+        data={data}
+        stickyHeader
+        options={{
+          maxBodyHeight: 200
+        }}
+      />
     </div>
   ));

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { TableBody, TableRow, TableCell } from "@material-ui/core";
-import { Column, Options } from "../types";
+import { Column, Options, Components } from "../types";
 
 interface IProps {
-  components?: object;
+  components?: Components;
   columns: Column<object>[];
   detailPanel?: () => void | (object | (() => void))[];
   options?: Options;
@@ -14,6 +14,7 @@ interface IProps {
   };
   originalData: any[];
   pageSize: number;
+  onRowClick?: () => void;
 }
 
 const Tabel_Body: React.ComponentType<IProps> = props => {
@@ -23,31 +24,28 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
     try {
       if (props.options) {
         const rowHeight = props.options.padding === "default" ? 49 : 36;
-        const localization = {
+        const localization: typeof props.localization = {
           ...props.localization
         };
-
+        console.log("Tabel_Body renderEmpty", localization);
         if (originalData.length === 0) {
           return (
             <TableRow key={"empty-" + 0} style={{}}>
               <TableCell
                 style={{ paddingTop: 0, paddingBottom: 0, textAlign: "center" }}
                 colSpan={props.columns.length}
-                key="empty-"></TableCell>
+                key="empty-">
+                {localization.emptyDataSourceMessage}
+              </TableCell>
             </TableRow>
           );
         } else if (props.options && props.options.emptyRowsWhenPaging) {
           return (
             <React.Fragment>
               {[...Array(emptyRowCount)].map((r, index) => (
-                <TableRow
-                  style={{ height: rowHeight }}
-                  key={"empty-" + index}
-                />
+                <TableRow style={{ height: rowHeight }} key={"empty-" + index} />
               ))}
-              {emptyRowCount > 0 && (
-                <TableRow style={{ height: 1 }} key={"empty-last1"} />
-              )}
+              {emptyRowCount > 0 && <TableRow style={{ height: 1 }} key={"empty-last1"} />}
             </React.Fragment>
           );
         }
@@ -56,6 +54,41 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
       console.warn(error.message);
       throw error;
     }
+  };
+
+  const renderUngroupedRows = (originalData: any[]) => {
+    try {
+      return originalData.map((data: any, index: number) => {
+        if (data.tableData && data.tableData.editing) {
+          // editrow ...
+          return;
+        } else {
+          if (props.components) {
+            return (
+              <props.components.BodyRow
+                key={data.tableData ? `key-${data.tableData.id}` : `not found tableData`}
+                data={data}
+                index={index}
+                components={props.components}
+                level={0}
+                options={props.options}
+                columns={props.columns}
+                onRowClick={props.onRowClick}
+              />
+            );
+          } else {
+            console.warn("Table_Body renderUngroupedRows : 지정된 컴포넌트 데이터가 없습니다.");
+          }
+        }
+      });
+    } catch (error) {
+      console.warn(error.message);
+      throw error.message;
+    }
+  };
+
+  const renderGroupedRows = (groups: Column<object>[], originalData: any[]) => {
+    console.log("renderGroupedRows", groups, originalData);
   };
 
   // rows data
@@ -68,9 +101,7 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
   const groups = props.columns
     .filter(col => col.tableData && col.tableData.groupOrder > -1)
     .sort((col1, col2) =>
-      col1.tableData && col2.tableData
-        ? col1.tableData.groupOrder - col2.tableData.groupOrder
-        : 0
+      col1.tableData && col2.tableData ? col1.tableData.groupOrder - col2.tableData.groupOrder : 0
     );
 
   console.log("groups.length", groups.length);
@@ -78,9 +109,7 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
   return (
     <TableBody>
       {/* column(header)의 그룹이 하나라도 지정되면 renderGroupedRow 이벤트 실행 그룹이 하나도 없다면 renderUngroupedRows 이벤트 실행!! */}
-      {/* {groups.length
-        ? renderGroupedRows(groups, originalData)
-        : renderUngroupedRows(renderData)} */}
+      {groups.length ? renderGroupedRows(groups, originalData) : renderUngroupedRows(originalData)}
       {renderEmpty(emptyRowCount, originalData)}
     </TableBody>
   );
