@@ -1,3 +1,5 @@
+import { Column } from "../types";
+
 export default class DataManager {
   // Init Variable
   selectedCount = 0;
@@ -81,4 +83,43 @@ export const setColumnsManager = (columns: any[]) => {
     return columnDef;
   });
   return columns;
+};
+
+export const getFieldValue = (
+  rowData: any[string | number],
+  columnDef: Column<object>,
+  lookup: boolean = true
+) => {
+  debugger;
+  // columnDef.fiel
+  // let value = columnDef &&
+  //     typeof rowData[columnDef.field] !== "undefined"
+  //       ? rowData[columnDef.field]
+  //       : byString(rowData, columnDef.field);
+  //   if (columnDef.lookup && lookup) {
+  //     value = columnDef.lookup[value];
+  //   }
+
+  //   return value;
+  return "getFieldValue test";
+};
+
+export const byString = (o: any[string | number], s: string) => {
+  if (!s) {
+    return;
+  }
+
+  s = s.replace(/\[(\w+)\]/g, ".$1"); // 인덱스를 속성으로 변환
+  s = s.replace(/^\./, ""); // '.' 제거
+
+  var a: string[] = s.split(".");
+  for (var i = 0, n = a.length; i < n; ++i) {
+    var x: string = a[i];
+    if (o && x in o) {
+      o = o[x];
+    } else {
+      return;
+    }
+  }
+  return o;
 };

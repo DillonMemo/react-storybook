@@ -34,7 +34,11 @@ const TestTable: React.FunctionComponent<IProps<object>> = props => {
   return (
     <div>
       <h1>YapTV 공용 Table Component 라이브러리</h1>
-      <Paper style={{ maxHeight: props.options && props.options.maxBodyHeight, overflowY: "auto" }}>
+      <Paper
+        style={{
+          maxHeight: props.options && props.options.maxBodyHeight,
+          overflowY: "auto"
+        }}>
         <Table stickyHeader={props.stickyHeader}>
           {props.options && props.options.header && props.components && (
             <props.components.Header
@@ -47,13 +51,13 @@ const TestTable: React.FunctionComponent<IProps<object>> = props => {
             <props.components.Body
               columns={columns}
               components={props.components}
-              originalData={originalData}
-              options={props.options}
               Localization={
                 props.localization && {
                   ...props.localization.body
                 }
               }
+              originalData={originalData}
+              options={props.options}
             />
           )}
         </Table>

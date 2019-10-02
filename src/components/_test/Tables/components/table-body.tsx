@@ -20,6 +20,11 @@ interface IProps {
 const Tabel_Body: React.ComponentType<IProps> = props => {
   console.log("TableBody props", props);
 
+  /**
+   * 데이터가 비었음을 나타내는 이벤트 핸들러
+   * @param emptyRowCount - (pageSize - originalData.length)
+   * @param originalData - 데이터 셋
+   */
   const renderEmpty = (emptyRowCount: number, originalData: any[]) => {
     try {
       if (props.options) {
@@ -43,9 +48,14 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
           return (
             <React.Fragment>
               {[...Array(emptyRowCount)].map((r, index) => (
-                <TableRow style={{ height: rowHeight }} key={"empty-" + index} />
+                <TableRow
+                  style={{ height: rowHeight }}
+                  key={"empty-" + index}
+                />
               ))}
-              {emptyRowCount > 0 && <TableRow style={{ height: 1 }} key={"empty-last1"} />}
+              {emptyRowCount > 0 && (
+                <TableRow style={{ height: 1 }} key={"empty-last1"} />
+              )}
             </React.Fragment>
           );
         }
@@ -56,6 +66,10 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
     }
   };
 
+  /**
+   * Group 설정모드가 아닌 Rows 랜더링 이벤트 핸들러
+   * @param originalData - 데이터 셋
+   */
   const renderUngroupedRows = (originalData: any[]) => {
     try {
       return originalData.map((data: any, index: number) => {
@@ -66,7 +80,11 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
           if (props.components) {
             return (
               <props.components.BodyRow
-                key={data.tableData ? `key-${data.tableData.id}` : `not found tableData`}
+                key={
+                  data.tableData
+                    ? `key-${data.tableData.id}`
+                    : `not found tableData`
+                }
                 data={data}
                 index={index}
                 components={props.components}
@@ -77,7 +95,9 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
               />
             );
           } else {
-            console.warn("Table_Body renderUngroupedRows : 지정된 컴포넌트 데이터가 없습니다.");
+            console.warn(
+              "Table_Body renderUngroupedRows : 지정된 컴포넌트 데이터가 없습니다."
+            );
           }
         }
       });
@@ -87,6 +107,11 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
     }
   };
 
+  /**
+   * Group 설정모드인 Rows 랜더링 이벤트 핸들러
+   * @param groups - 그룹 설정된 Columns
+   * @param originalData - Row 데이터 셋
+   */
   const renderGroupedRows = (groups: Column<object>[], originalData: any[]) => {
     console.log("renderGroupedRows", groups, originalData);
   };
@@ -101,7 +126,9 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
   const groups = props.columns
     .filter(col => col.tableData && col.tableData.groupOrder > -1)
     .sort((col1, col2) =>
-      col1.tableData && col2.tableData ? col1.tableData.groupOrder - col2.tableData.groupOrder : 0
+      col1.tableData && col2.tableData
+        ? col1.tableData.groupOrder - col2.tableData.groupOrder
+        : 0
     );
 
   console.log("groups.length", groups.length);
@@ -109,7 +136,9 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
   return (
     <TableBody>
       {/* column(header)의 그룹이 하나라도 지정되면 renderGroupedRow 이벤트 실행 그룹이 하나도 없다면 renderUngroupedRows 이벤트 실행!! */}
-      {groups.length ? renderGroupedRows(groups, originalData) : renderUngroupedRows(originalData)}
+      {groups.length
+        ? renderGroupedRows(groups, originalData)
+        : renderUngroupedRows(originalData)}
       {renderEmpty(emptyRowCount, originalData)}
     </TableBody>
   );
