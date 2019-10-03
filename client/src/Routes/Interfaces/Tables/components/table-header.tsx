@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { TableHead, TableRow, TableCell, TableSortLabel } from "@material-ui/core";
+import {
+  TableHead,
+  TableRow,
+  TableCell,
+  TableSortLabel
+} from "@material-ui/core";
+import { ArrowUpward } from "@material-ui/icons";
 import { Column } from "../types";
+import { SvgIconProps } from "@material-ui/core/SvgIcon";
 
 interface IProps {
   columns: Column<object>[];
@@ -21,23 +28,37 @@ const Table_Header: React.FunctionComponent<IProps> = props => {
     const mapArr = props.columns
       .filter(
         columnDef =>
-          !columnDef.hidden && !(columnDef.tableData && columnDef.tableData.groupOrder > -1)
+          !columnDef.hidden &&
+          !(columnDef.tableData && columnDef.tableData.groupOrder > -1)
       )
       .sort((a, b) =>
-        a.tableData && b.tableData ? a.tableData.columnOrder - b.tableData.columnOrder : 0
+        a.tableData && b.tableData
+          ? a.tableData.columnOrder - b.tableData.columnOrder
+          : 0
       )
       .map((columnDef, index) => {
         let content = columnDef.title;
         // console.log("columnDef sort", columnDef.sorting, "props.sort", props.sorting);
         if (columnDef.sorting !== false && props.sorting) {
           content = <TableSortLabel>{content}</TableSortLabel>;
+
+          // let arrowUpward: any = <ArrowUpward />;
+          // let content2 = (
+          // <TableSortLabel
+          // IconComponent={arrowUpward}
+          // >
+          //   test
+          // </TableSortLabel>
+          // )
         }
 
         return (
           <TableCell
             key={columnDef.tableData && columnDef.tableData.id}
             align={
-              ["numeric"].indexOf(columnDef.type ? columnDef.type : "undefined") !== -1
+              ["numeric"].indexOf(
+                columnDef.type ? columnDef.type : "undefined"
+              ) !== -1
                 ? "right"
                 : "left"
             }

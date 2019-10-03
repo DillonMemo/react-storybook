@@ -43,7 +43,6 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
         return <Remove style={style} />;
       }
     } else if (props.columnDef.type === "date") {
-      debugger;
       if ((props as any).value instanceof Date) {
         return new Date(
           (props.value as Date).setMonth((props.value as Date).getMonth() - 1)

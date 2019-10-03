@@ -10,7 +10,7 @@ const SidebarMaster: React.FunctionComponent = () => {
         <ul className="summary">
           <li className="divider"></li>
           <li className="chapter">
-            <Link to={"/"}>
+            <Link to={"/"} style={{ backgroundColor: "lightgray" }}>
               <div
                 style={{
                   display: "flex",
@@ -20,7 +20,7 @@ const SidebarMaster: React.FunctionComponent = () => {
                 <img
                   src={Icon_Pencil}
                   alt="Icon_Pencil"
-                  style={{ width: "10%" }}
+                  style={{ width: "25%", borderRadius: "50%" }}
                 />
               </div>
               <div style={{ fontWeight: "bold" }}>

@@ -1,7 +1,14 @@
 import React, { Ref, ReactElement, PropsWithChildren } from "react";
-import { Table_Header, Table_Body, Table_Body_Row, Table_Cell } from "../components";
+import {
+  Table_Header,
+  Table_Body,
+  Table_Body_Row,
+  Table_Cell
+} from "../components";
 import { IProps } from "../types";
-import { Check } from "@material-ui/icons";
+import Icon, { IconProps } from "@material-ui/core/Icon";
+import { LinkProps } from "@material-ui/core/Link";
+import { NavLink } from "react-router-dom";
 
 export const defaultProps: IProps<object> = {
   columns: [],
@@ -12,6 +19,8 @@ export const defaultProps: IProps<object> = {
     Header: Table_Header
   },
   data: [],
+  isLoading: false,
+  title: "Table Title",
   localization: {
     body: {
       filterRow: {},
@@ -29,7 +38,7 @@ export const defaultProps: IProps<object> = {
     paging: false,
     pageSize: 5,
     pageSizeOptions: [5, 10, 20],
-    sorting: false
+    sorting: true
   },
   stickyHeader: false
   //   style: {}

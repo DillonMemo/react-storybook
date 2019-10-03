@@ -81,6 +81,7 @@ const data = [
 ];
 
 const columns = [
+  { title: "Adı", field: "name" },
   { title: "Soyadı", field: "surname" },
   { title: "Evli", field: "isMarried", type: "boolean" },
   { title: "Cinsiyet", field: "sex" },
@@ -98,6 +99,7 @@ const index: React.FunctionComponent = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <TableElement
+        title={"Table Component Generator"}
         columns={columns}
         data={data}
         stickyHeader

@@ -2,14 +2,13 @@ import React from "react";
 import { IconProps } from "@material-ui/core/Icon";
 
 export interface IProps<RowData extends object> {
-  //   columns: Column<RowData>[];
   columns: Column[];
   components?: Components;
   data: RowData[] | ((query: Query<RowData>) => Promise<QueryResult<RowData>>);
   detailPanel?:
     | ((rowData: RowData) => React.ReactNode)
     | (DetailPanel<RowData> | ((rowData: RowData) => DetailPanel<RowData>))[];
-  icons?: Icons;
+  // icons?: Icons;
   localization?: Localization;
   options?: Options;
   onRowClick?: (
@@ -18,6 +17,8 @@ export interface IProps<RowData extends object> {
     toggleDetailPanel?: (panelIndex?: number) => void
   ) => void;
   stickyHeader?: boolean;
+  isLoading?: boolean;
+  title?: string | React.ReactElement<any>;
 }
 
 export interface Column<RowData extends object> {
@@ -27,7 +28,10 @@ export interface Column<RowData extends object> {
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
   };
-  emptyValue?: string | React.ReactElement<any> | ((data: any) => React.ReactElement<any> | string);
+  emptyValue?:
+    | string
+    | React.ReactElement<any>
+    | ((data: any) => React.ReactElement<any> | string);
   field?: keyof RowData;
   hidden?: boolean;
   render?: (data: RowData, type: "row" | "group") => any;
@@ -40,7 +44,14 @@ export interface Column<RowData extends object> {
     id: number;
   };
   title?: string | React.ReactElement<any>;
-  type?: "string" | "boolean" | "numeric" | "date" | "datetime" | "time" | "currency";
+  type?:
+    | "string"
+    | "boolean"
+    | "numeric"
+    | "date"
+    | "datetime"
+    | "time"
+    | "currency";
 }
 
 export interface Components {
@@ -73,7 +84,15 @@ export interface Options {
   pageSizeOptions?: number[];
   sorting?: boolean;
 }
-export interface Query<RowData extends object> {}
+export interface Query<RowData extends object> {
+  filters: Filter<RowData>[];
+  page: number;
+  pageSize: number;
+  search: string;
+  orderBy: Column<RowData>;
+  orderDirection: "asc" | "desc" | "";
+  totalCount: number;
+}
 export interface QueryResult<RowData extends object> {
   data: RowData[];
   page: number;

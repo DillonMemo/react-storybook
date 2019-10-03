@@ -1,10 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Paper, Table } from "@material-ui/core";
-import { IProps } from "./types";
+import { IProps, Query, QueryResult } from "./types";
 import { defaultProps } from "./utils/default-props";
 import { setColumnsManager, setDataManager } from "./utils/data-manager";
 
-const isRemoteData = (props: IProps<object>) => !Array.isArray(props.data);
+const isRemoteData = (props?: IProps<object>) =>
+  !Array.isArray(props && props.data);
+
+const useRequest = (callback: Function) => {
+  const [state, setState] = useState({ isLoading: false });
+
+  useEffect(() => {});
+};
 
 const TableElement: React.FunctionComponent<IProps<object>> = props => {
   const getProps = (props: IProps<object>) => {
@@ -23,17 +30,89 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
 
     return calculatedProps;
   };
+
+  const onChangeOrder = (
+    orderBy: number,
+    orderDirection: typeof query.orderDirection
+  ) => {
+    const newOrderBy = orderDirection === "" ? -1 : orderBy;
+    setRenderState(state => ({
+      ...state,
+      orderBy: orderBy,
+      orderDirection: orderDirection,
+      currentPage: 0,
+      sorted: false
+    }));
+
+    if (isRemoteData()) {
+      const _query = { ...query };
+      _query.page = 0;
+      _query.orderBy = columns.find(a => a.tableData.id === newOrderBy);
+      _query.orderDirection = orderDirection;
+      onQueryChange(_query, () => {});
+    }
+  };
+
+  const onQueryChange = (_query: typeof query, callback: Function) => {
+    _query = { ...query, ..._query };
+
+    // setState(state => ({ isLoading: true }));
+
+    // useEffect(() => {
+    //   (props.data as ((query: Query<object>) => Promise<QueryResult<object>>))(
+    //     _query
+    //   ).then(result => {
+    //     _query.totalCount = result.totalCount;
+    //     _query.page = result.page;
+    //     setOriginalData(setDataManager(result.data));
+    //     setState(state => ({ isLoading: false }));
+    //     setQuery(_query);
+    //   });
+    // }, [callback && callback()]);
+  };
   props = getProps(props);
   console.log("TableElement props", props);
 
+  // render states
+  const [state, setState] = useState({ isLoading: props.isLoading });
   const [columns, setColumns] = useState(setColumnsManager(props.columns));
   const [originalData, setOriginalData] = useState(
     isRemoteData(props) ? [] : setDataManager(props.data)
   );
+  const [showAddRow, setShowAddRow] = useState<boolean>(false);
+
+  // render states
+  const [renderState, setRenderState] = useState({
+    orderBy: -1,
+    orderDirection: "",
+    currentPage: 0,
+    sorted: false,
+    searchText: ""
+  });
+
+  // query states
+  const [query, setQuery] = useState<Query<object>>({
+    filters: columns
+      .filter(a => a.tableData.filterValue)
+      .map(a => ({
+        column: a,
+        operator: "=",
+        value: a.tableData.filterValue
+      })),
+    orderBy: columns.find(a => a.tableData.id === renderState.orderBy),
+    orderDirection: renderState.orderDirection as "" | "asc" | "desc",
+    page: 0,
+    pageSize:
+      props.options && props.options.pageSize ? props.options.pageSize : 5,
+    search: renderState.searchText,
+    totalCount: 0
+  });
+
+  useEffect(() => {}, [renderState]);
 
   return (
     <div>
-      <h1>YapTV 공용 Table Component 라이브러리</h1>
+      <h1>{props.title}</h1>
       <Paper
         style={{
           maxHeight: props.options && props.options.maxBodyHeight,
@@ -45,6 +124,7 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
               components={props.components}
               columns={props.columns}
               sorting={props.options.sorting}
+              onChangeOrder={onChangeOrder}
             />
           )}
           {props.components && (
