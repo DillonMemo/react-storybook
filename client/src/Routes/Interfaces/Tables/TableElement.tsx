@@ -1,10 +1,20 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Paper, Table } from "@material-ui/core";
+import {
+  Paper,
+  Table,
+  Theme,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableSortLabel
+} from "@material-ui/core";
 import { IProps, Query, QueryResult, Column } from "./types";
 import { defaultProps } from "./utils/default-props";
 import DataManager from "./utils/data-manager";
+import { makeStyles, createStyles } from "@material-ui/styles";
 
-const isRemoteData = (props?: IProps<object>) => !Array.isArray(props && props.data);
+const isRemoteData = (props?: IProps<object>) =>
+  !Array.isArray(props && props.data);
 
 // const useStateWithCallback<S> = (initialState: any, callback: Function) => {
 //   const [state, setState] = useState(initialState);
@@ -16,6 +26,7 @@ const isRemoteData = (props?: IProps<object>) => !Array.isArray(props && props.d
 
 const TableElement: React.FunctionComponent<IProps<object>> = props => {
   const dataManager = new DataManager();
+  const classes = useStyles();
 
   const getProps = (props: IProps<object>) => {
     const calculatedProps = { ...props };
@@ -41,7 +52,9 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     if (props) {
       defaultSortColumnIndex = props.columns.findIndex(a => a.defaultSort);
       defaultSortDirection =
-        defaultSortColumnIndex > -1 ? props.columns[defaultSortColumnIndex].defaultSort : "";
+        defaultSortColumnIndex > -1
+          ? props.columns[defaultSortColumnIndex].defaultSort
+          : "";
     }
 
     dataManager.setColumns(props.columns);
@@ -54,8 +67,10 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     // sorting
   };
 
-  const onChangeOrder = (orderBy: number, orderDirection: typeof query.orderDirection) => {
-    debugger;
+  const onChangeOrder = (
+    orderBy: number,
+    orderDirection: typeof query.orderDirection
+  ) => {
     const newOrderBy = orderDirection === "" ? -1 : orderBy;
 
     dataManager.changeOrder(newOrderBy, orderDirection);
@@ -86,13 +101,22 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
         operator: "=",
         value: a.tableData && a.tableData.filterValue
       })),
-    orderBy: renderState.columns.find(a => a.tableData && a.tableData.id === renderState.orderBy),
+    orderBy: renderState.columns.find(
+      a => a.tableData && a.tableData.id === renderState.orderBy
+    ),
     orderDirection: renderState.orderDirection as "" | "asc" | "desc",
     page: 0,
-    pageSize: props.options && props.options.pageSize ? props.options.pageSize : 5,
+    pageSize:
+      props.options && props.options.pageSize ? props.options.pageSize : 5,
     search: renderState.searchText,
     totalCount: 0
   });
+
+  useEffect(() => {
+    debugger;
+    props.onOrderChange &&
+      props.onOrderChange(renderState.orderBy, renderState.orderDirection);
+  }, [renderState.orderBy, renderState.orderDirection]);
 
   return (
     <div>
@@ -104,14 +128,40 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
         }}>
         <Table stickyHeader={props.stickyHeader}>
           {props.options && props.options.header && props.components && (
-            <props.components.Header
-              components={props.components}
-              columns={renderState.columns}
-              sorting={props.options.sorting}
-              orderBy={renderState.orderBy}
-              orderDirection={renderState.orderDirection}
-              onChangeOrder={onChangeOrder}
-            />
+            // <props.components.Header
+            //   classes={classes}
+            //   components={props.components}
+            //   columns={renderState.columns}
+            //   sorting={props.options.sorting}
+            //   orderBy={renderState.orderBy}
+            //   orderDirection={renderState.orderDirection}
+            //   onOrderChange={onChangeOrder}
+            // />
+
+            <TableHead>
+              <TableRow>
+                {renderState.columns.map(columnDef => (
+                  <TableCell
+                    key={columnDef.tableData && columnDef.tableData.id}
+                    align={
+                      ["numeric"].indexOf(
+                        columnDef.type ? columnDef.type : "undefined"
+                      ) !== -1
+                        ? "right"
+                        : "left"
+                    }
+                    padding={true ? "default" : "none"}
+                    className=""
+                    style={{}}>
+                    <TableSortLabel
+                      active={renderState.orderBy === columnDef.tableData.id}
+                      direction={
+                        renderState.orderDirection || "asc"
+                      }></TableSortLabel>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
           )}
           {props.components && (
             <props.components.Body
@@ -134,5 +184,21 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
 };
 
 TableElement.defaultProps = defaultProps;
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    visuallyHidden: {
+      border: 0,
+      clip: "rect(0 0 0 0)",
+      height: 1,
+      margin: -1,
+      overflow: "hidden",
+      padding: 0,
+      position: "absolute",
+      top: 20,
+      width: 1
+    }
+  })
+);
 
 export default TableElement;

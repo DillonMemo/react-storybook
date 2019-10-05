@@ -70,7 +70,9 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
         return props.value;
       }
     } else if (props.columnDef.type === "currency") {
-      const value: number = Number(props.value !== undefined ? props.value : "0");
+      const value: number = Number(
+        props.value !== undefined ? props.value : "0"
+      );
       return getCurrencyValue(props.columnDef.currencySetting, value);
     }
 
@@ -95,7 +97,9 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
         {
           style: "currency",
           currency:
-            currencySetting.currencyCode !== undefined ? currencySetting.currencyCode : "KRW",
+            currencySetting.currencyCode !== undefined
+              ? currencySetting.currencyCode
+              : "KRW",
           minimumFractionDigits:
             currencySetting.minimumFractionDigits !== undefined
               ? currencySetting.minimumFractionDigits
@@ -140,7 +144,9 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
       size={props.size}
       {...props.cellProps}
       align={
-        ["numeric"].indexOf(props.columnDef.type ? props.columnDef.type : "") !== -1
+        ["numeric"].indexOf(
+          props.columnDef.type ? props.columnDef.type : ""
+        ) !== -1
           ? "right"
           : "left"
       }
@@ -153,7 +159,7 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
 };
 
 (Table_Cell.defaultProps as IProps) = {
-  columnDef: {}
+  columnDef: { tableData: { columnOrder: 0, id: 0 } }
 };
 
 export default Table_Cell;

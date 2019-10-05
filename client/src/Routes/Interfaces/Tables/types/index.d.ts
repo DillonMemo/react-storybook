@@ -19,7 +19,10 @@ export interface IProps<RowData extends object> {
   stickyHeader?: boolean;
   isLoading?: boolean;
   title?: string | React.ReactElement<any>;
-  onChangeOrder?: (orderBy: number, orderDirection: "asc" | "desc" | "") => void;
+  onOrderChange?: (
+    orderBy: number,
+    orderDirection: "asc" | "desc" | ""
+  ) => void;
 }
 
 export interface Column<RowData extends object> {
@@ -30,12 +33,15 @@ export interface Column<RowData extends object> {
     maximumFractionDigits?: number;
   };
   defaultSort?: "asc" | "desc";
-  emptyValue?: string | React.ReactElement<any> | ((data: any) => React.ReactElement<any> | string);
+  emptyValue?:
+    | string
+    | React.ReactElement<any>
+    | ((data: any) => React.ReactElement<any> | string);
   field?: keyof RowData;
   hidden?: boolean;
   render?: (data: RowData, type: "row" | "group") => any;
   sorting?: boolean;
-  tableData?: {
+  tableData: {
     columnOrder: number;
     filterValue?: any;
     groupOrder?: any;
@@ -43,7 +49,14 @@ export interface Column<RowData extends object> {
     id: number;
   };
   title?: string | React.ReactElement<any>;
-  type?: "string" | "boolean" | "numeric" | "date" | "datetime" | "time" | "currency";
+  type?:
+    | "string"
+    | "boolean"
+    | "numeric"
+    | "date"
+    | "datetime"
+    | "time"
+    | "currency";
 }
 
 export interface Components {

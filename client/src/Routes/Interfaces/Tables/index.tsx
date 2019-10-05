@@ -140,7 +140,7 @@ const index: React.FunctionComponent = () => {
         ]}
         stickyHeader
         options={{
-          sorting: false,
+          sorting: true,
           maxBodyHeight: 350
         }}
       />
