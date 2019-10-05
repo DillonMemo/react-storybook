@@ -100,10 +100,27 @@ const index: React.FunctionComponent = () => {
     <div style={{ display: "flex", justifyContent: "center" }}>
       <TableElement
         title={"Table Component Generator"}
-        columns={columns}
-        data={data}
+        columns={[
+          {
+            title: "Name",
+            field: "name"
+          },
+          {
+            title: "번호",
+            field: "index"
+          }
+        ]}
+        data={[
+          {
+            name: "Dillon",
+            index: 1,
+            gender: "남성"
+          },
+          { name: "Robin", index: 2, gender: "여성" }
+        ]}
         stickyHeader
         options={{
+          sorting: true,
           maxBodyHeight: 350
         }}
       />

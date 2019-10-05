@@ -44,32 +44,33 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
       }
     } else if (props.columnDef.type === "date") {
       if ((props as any).value instanceof Date) {
-        return new Date(
-          (props.value as Date).setMonth((props.value as Date).getMonth() - 1)
-        ).toLocaleDateString();
+        // return new Date(
+        //   (props.value as Date).setMonth((props.value as Date).getMonth() - 1)
+        // ).toLocaleDateString();
+        return (props.value as Date).toLocaleDateString();
       } else {
         return props.value;
       }
     } else if (props.columnDef.type === "time") {
       if ((props as any).value instanceof Date) {
-        return new Date(
-          (props.value as Date).setMonth((props.value as Date).getMonth() - 1)
-        ).toLocaleDateString();
+        // return new Date(
+        //   (props.value as Date).setMonth((props.value as Date).getMonth() - 1)
+        // ).toLocaleDateString();
+        return (props.value as Date).toLocaleDateString();
       } else {
         return props.value;
       }
     } else if (props.columnDef.type === "datetime") {
       if ((props as any).value instanceof Date) {
-        return new Date(
-          (props.value as Date).setMonth((props.value as Date).getMonth() - 1)
-        ).toLocaleDateString();
+        // return new Date(
+        //   (props.value as Date).setMonth((props.value as Date).getMonth() - 1)
+        // ).toLocaleDateString();
+        return (props.value as Date).toLocaleDateString();
       } else {
         return props.value;
       }
     } else if (props.columnDef.type === "currency") {
-      const value: number = Number(
-        props.value !== undefined ? props.value : "0"
-      );
+      const value: number = Number(props.value !== undefined ? props.value : "0");
       return getCurrencyValue(props.columnDef.currencySetting, value);
     }
 
@@ -94,9 +95,7 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
         {
           style: "currency",
           currency:
-            currencySetting.currencyCode !== undefined
-              ? currencySetting.currencyCode
-              : "KRW",
+            currencySetting.currencyCode !== undefined ? currencySetting.currencyCode : "KRW",
           minimumFractionDigits:
             currencySetting.minimumFractionDigits !== undefined
               ? currencySetting.minimumFractionDigits
@@ -141,9 +140,7 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
       size={props.size}
       {...props.cellProps}
       align={
-        ["numeric"].indexOf(
-          props.columnDef.type ? props.columnDef.type : ""
-        ) !== -1
+        ["numeric"].indexOf(props.columnDef.type ? props.columnDef.type : "") !== -1
           ? "right"
           : "left"
       }

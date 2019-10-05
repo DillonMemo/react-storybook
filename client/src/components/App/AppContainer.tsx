@@ -8,6 +8,7 @@ import BodyMaster from "../masters/BodyMaster";
 import Home from "../../Routes/Home";
 import D3 from "../../Routes/D3";
 import Tables from "../../Routes/Interfaces/Tables";
+import Test from "../../Routes/Interfaces/_test";
 
 const App: React.FC = ({ component }: any) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
@@ -44,6 +45,7 @@ const Routes: React.FunctionComponent = () => (
     <Route path={"/"} exact={true} component={Home} />
     <Route path={"/d3"} component={D3} />
     <Route path={"/interfaces/tables"} component={Tables} />
+    <Route path={"/interfaces/_test"} component={Test} />
   </Switch>
 );
 

@@ -1,7 +1,6 @@
 import React from "react";
 import { TableRow, TableCell } from "@material-ui/core";
 import { Column, Options, Components } from "../types";
-import { getFieldValue } from "../utils/data-manager";
 
 interface IProps {
   columns: Column<object>[];
@@ -10,6 +9,7 @@ interface IProps {
   index: number;
   options: Options;
   onRowClick: () => void;
+  getFieldValue: (rowData: any[string | number], columnDef: any, lookup?: boolean) => any;
 }
 
 const Table_Body_Row: React.FunctionComponent<IProps> = props => {
@@ -24,7 +24,7 @@ const Table_Body_Row: React.FunctionComponent<IProps> = props => {
         a.tableData && b.tableData ? a.tableData.groupOrder - b.tableData.groupOrder : 0
       )
       .map((columnDef, index) => {
-        const value = getFieldValue(props.data, columnDef);
+        const value = props.getFieldValue(props.data, columnDef);
 
         return (
           <props.components.Cell

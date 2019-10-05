@@ -14,6 +14,7 @@ interface IProps {
   };
   originalData: any[];
   pageSize: number;
+  getFieldValue?: () => void;
   onRowClick?: () => void;
 }
 
@@ -82,6 +83,7 @@ const Tabel_Body: React.ComponentType<IProps> = props => {
                 level={0}
                 options={props.options}
                 columns={props.columns}
+                getFieldValue={props.getFieldValue}
                 onRowClick={props.onRowClick}
               />
             );

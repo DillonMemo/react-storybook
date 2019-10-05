@@ -23,9 +23,7 @@ const SidebarMaster: React.FunctionComponent = () => {
                   style={{ width: "25%", borderRadius: "50%" }}
                 />
               </div>
-              <div style={{ fontWeight: "bold" }}>
-                My React Storybook - 장동원
-              </div>
+              <div style={{ fontWeight: "bold" }}>My React Storybook - 장동원</div>
             </Link>
             <ul className="articles">
               <li className="chapter" style={{ marginTop: 10 }}>
@@ -41,6 +39,9 @@ const SidebarMaster: React.FunctionComponent = () => {
                 <ul className="articles">
                   <li className="chapter">
                     <Link to={"/interfaces/tables"}>Table Element</Link>
+                  </li>
+                  <li className="chapter">
+                    <Link to={"/interfaces/_test"}>_Test</Link>
                   </li>
                 </ul>
               </li>
