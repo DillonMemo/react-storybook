@@ -67,27 +67,16 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
         a => a.tableData && a.tableData.id === newOrderBy
       );
       _query.orderDirection = orderDirection;
-      // onQueryChange(_query, () => {});
     } else {
       setRenderState(dataManager.getRenderState());
-      setRenderStateCallBack({ newOrderBy, orderDirection });
     }
   };
-
-  // const onQueryChange = (_query: typeof query, callback?: Function) => {
-  //   _query = { ...query, ..._query };
-  // };
 
   props = getProps(props);
   setDataManagerFields(props, true);
   const [renderState, setRenderState] = useState(dataManager.getRenderState());
   console.log("TableElement props", props);
 
-  // Callback resource
-  const [renderStateCallBack, setRenderStateCallBack] = useState({
-    newOrderBy: -1,
-    orderDirection: "" as "" | "asc" | "desc"
-  });
   // query states
   const [query, setQuery] = useState<Query<object>>({
     filters: renderState.columns
@@ -104,28 +93,6 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     search: renderState.searchText,
     totalCount: 0
   });
-
-  // componentDidMount
-  // useEffect(() => {
-  //   onQueryChange(query);
-  // }, []);
-
-  // componentDidUpdate
-  // useEffect(() => {
-  //   const count = isRemoteData(props) ? query.totalCount : renderState.data.length;
-  //   const currentPage = isRemoteData(props) ? query.page : renderState.currentPage;
-  //   const pageSize = isRemoteData(props) ? query.pageSize : renderState.pageSize;
-
-  //   if (count <= pageSize * currentPage && currentPage !== 0) {
-  //     // onChangePage(null, Math.max(0, Math.ceil(count / pageSize) - 1));
-  //   }
-  // }, [renderState, query]);
-
-  // CallBack event
-  useEffect(() => {
-    props.onChangeOrder &&
-      props.onChangeOrder(renderStateCallBack.newOrderBy, renderStateCallBack.orderDirection);
-  }, [renderState]);
 
   return (
     <div>

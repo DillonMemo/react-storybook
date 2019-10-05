@@ -3,7 +3,7 @@ import { IProps, Column, Query, QueryResult } from "../types";
 export default class DataManager implements IProps<object> {
   currentPage = 0;
   orderBy = -1;
-  orderDirection = "";
+  orderDirection: "" | "asc" | "desc" = "";
   pageSize = 5;
   paging = true;
   searchText = "";

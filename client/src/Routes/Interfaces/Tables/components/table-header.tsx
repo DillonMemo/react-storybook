@@ -37,34 +37,8 @@ const Table_Header: React.FunctionComponent<IProps> = props => {
         const tableIcons = {
           SortArrow: forwardRef<any, {}>((props, ref) => <ArrowUpward {...props} ref={ref} />)
         };
-        // console.log("columnDef sort", columnDef.sorting, "props.sort", props.sorting);
         if (columnDef.sorting !== false && props.sorting && columnDef.tableData) {
-          content = (
-            <TableSortLabel
-              IconComponent={tableIcons.SortArrow as any}
-              active={props.orderBy === columnDef.tableData.id}
-              direction={props.orderDirection || "asc"}
-              onClick={() => {
-                // const orderDirection =
-                //   columnDef.tableData && columnDef.tableData.id !== props.orderBy
-                //     ? "asc"
-                //     : props.orderDirection === "asc"
-                //     ? "desc"
-                //     : props.orderDirection === "desc"
-                //     ? ""
-                //     : props.orderDirection === ""
-                //     ? "asc"
-                //     : "desc";
-                const orderDirection = "desc";
-                props.onChangeOrder &&
-                  props.onChangeOrder(
-                    columnDef.tableData && columnDef.tableData.id,
-                    orderDirection
-                  );
-              }}>
-              {content}
-            </TableSortLabel>
-          );
+          content = <TableSortLabel>{content}</TableSortLabel>;
         }
 
         return (
@@ -85,11 +59,13 @@ const Table_Header: React.FunctionComponent<IProps> = props => {
     return mapArr;
   };
 
-  const [header, setHeader] = useState(renderHeader());
-
+  const [headers, setHeaders] = useState(renderHeader());
+  debugger;
+  // Checkbox 모두선택 이벤트
+  // if(props.hasSelection){}
   return (
     <TableHead>
-      <TableRow>{header}</TableRow>
+      <TableRow>{headers}</TableRow>
     </TableHead>
   );
 };

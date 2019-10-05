@@ -102,25 +102,45 @@ const index: React.FunctionComponent = () => {
         title={"Table Component Generator"}
         columns={[
           {
+            title: "번호",
+            field: "index"
+          },
+          {
             title: "Name",
             field: "name"
           },
           {
-            title: "번호",
-            field: "index"
+            title: "칼로리",
+            field: "calories"
+          },
+          {
+            title: "비만도",
+            field: "fat"
           }
         ]}
         data={[
           {
-            name: "Dillon",
             index: 1,
-            gender: "남성"
+            name: "Cupcake",
+            calories: 305,
+            fat: 3.7
           },
-          { name: "Robin", index: 2, gender: "여성" }
+          {
+            index: 2,
+            name: "Donut",
+            calories: 452,
+            fat: 25.0
+          },
+          {
+            index: 3,
+            name: "Eclair",
+            calories: 262,
+            fat: 16.0
+          }
         ]}
         stickyHeader
         options={{
-          sorting: true,
+          sorting: false,
           maxBodyHeight: 350
         }}
       />
