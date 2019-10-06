@@ -32,6 +32,11 @@ export interface Column<RowData extends object> {
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
   };
+  costomSort?: (
+    data1: RowData,
+    data2: Rowdata,
+    type: "row" | "group"
+  ) => number;
   defaultSort?: "asc" | "desc";
   emptyValue?:
     | string

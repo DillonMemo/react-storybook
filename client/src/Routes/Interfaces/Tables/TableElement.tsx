@@ -1,4 +1,11 @@
-import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
+import React, {
+  useState,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+  forwardRef,
+  MouseEvent
+} from "react";
 import {
   Paper,
   Table,
@@ -12,17 +19,10 @@ import { IProps, Query, QueryResult, Column } from "./types";
 import { defaultProps } from "./utils/default-props";
 import DataManager from "./utils/data-manager";
 import { makeStyles, createStyles } from "@material-ui/styles";
+import { ArrowUpward } from "@material-ui/icons";
 
 const isRemoteData = (props?: IProps<object>) =>
   !Array.isArray(props && props.data);
-
-// const useStateWithCallback<S> = (initialState: any, callback: Function) => {
-//   const [state, setState] = useState(initialState);
-
-//   useEffect(() => callback(state), [state, callback]);
-
-//   return [state, setState];
-// };
 
 const TableElement: React.FunctionComponent<IProps<object>> = props => {
   const dataManager = new DataManager();
@@ -47,7 +47,7 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
 
   const setDataManagerFields = (props: IProps<object>, isInit: boolean) => {
     let defaultSortColumnIndex = -1;
-    let defaultSortDirection = "";
+    let defaultSortDirection: "" | "asc" | "desc" = "";
 
     if (props) {
       defaultSortColumnIndex = props.columns.findIndex(a => a.defaultSort);
@@ -65,6 +65,8 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     }
 
     // sorting
+    isInit &&
+      dataManager.changeOrder(defaultSortColumnIndex, defaultSortDirection);
   };
 
   const onChangeOrder = (
@@ -112,11 +114,11 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     totalCount: 0
   });
 
-  useEffect(() => {
-    debugger;
-    props.onOrderChange &&
-      props.onOrderChange(renderState.orderBy, renderState.orderDirection);
-  }, [renderState.orderBy, renderState.orderDirection]);
+  const tableIcons: any = {
+    SortArrow: forwardRef<any, {}>((props, ref) => (
+      <ArrowUpward {...props} ref={ref} />
+    ))
+  };
 
   return (
     <div>
@@ -128,40 +130,15 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
         }}>
         <Table stickyHeader={props.stickyHeader}>
           {props.options && props.options.header && props.components && (
-            // <props.components.Header
-            //   classes={classes}
-            //   components={props.components}
-            //   columns={renderState.columns}
-            //   sorting={props.options.sorting}
-            //   orderBy={renderState.orderBy}
-            //   orderDirection={renderState.orderDirection}
-            //   onOrderChange={onChangeOrder}
-            // />
-
-            <TableHead>
-              <TableRow>
-                {renderState.columns.map(columnDef => (
-                  <TableCell
-                    key={columnDef.tableData && columnDef.tableData.id}
-                    align={
-                      ["numeric"].indexOf(
-                        columnDef.type ? columnDef.type : "undefined"
-                      ) !== -1
-                        ? "right"
-                        : "left"
-                    }
-                    padding={true ? "default" : "none"}
-                    className=""
-                    style={{}}>
-                    <TableSortLabel
-                      active={renderState.orderBy === columnDef.tableData.id}
-                      direction={
-                        renderState.orderDirection || "asc"
-                      }></TableSortLabel>
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
+            <props.components.Header
+              classes={classes}
+              // components={props.components}
+              columns={renderState.columns}
+              sorting={props.options.sorting || false}
+              orderBy={renderState.orderBy}
+              orderDirection={renderState.orderDirection}
+              onOrderChange={onChangeOrder}
+            />
           )}
           {props.components && (
             <props.components.Body
@@ -172,7 +149,7 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
                   ...props.localization.body
                 }
               }
-              originalData={renderState.originalData}
+              renderData={renderState.sortedData}
               options={props.options}
               getFieldValue={dataManager.getFieldValue}
             />
