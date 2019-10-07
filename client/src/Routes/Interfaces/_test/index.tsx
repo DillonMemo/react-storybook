@@ -1,11 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import {
-  createStyles,
-  lighten,
-  makeStyles,
-  Theme
-} from "@material-ui/core/styles";
+import { createStyles, lighten, makeStyles, Theme } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -83,26 +78,9 @@ type Order = "asc" | "desc";
 function getSorting<K extends keyof any>(
   order: Order,
   orderBy: K
-): (
-  a: { [key in K]: number | string },
-  b: { [key in K]: number | string }
-) => number {
-  return order === "desc"
-    ? (a, b) => desc(a, b, orderBy)
-    : (a, b) => -desc(a, b, orderBy);
+): (a: { [key in K]: number | string }, b: { [key in K]: number | string }) => number {
+  return order === "desc" ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
-
-const getSorting2 = <K extends keyof any>(
-  order: Order,
-  orderBy: K
-): ((
-  a: { [key in K]: number | string },
-  b: { [key in K]: number | string }
-) => number) => {
-  return order === "desc"
-    ? (a, b) => desc(a, b, orderBy)
-    : (a, b) => -desc(a, b, orderBy);
-};
 
 interface headCell {
   disablePadding: boolean;
@@ -127,32 +105,16 @@ const headCells: headCell[] = [
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>;
   numSelected?: number;
-  onRequestSort: (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => void;
-  onSelectAllClick?: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    checked: boolean
-  ) => void;
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
+  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
   order: Order;
   orderBy: string;
   rowCount: number;
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const {
-    classes,
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort
-  } = props;
-  const createSortHandler = (property: keyof Data) => (
-    event: React.MouseEvent<unknown>
-  ) => {
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property);
   };
 
@@ -303,10 +265,7 @@ export default function EnhancedTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
-    property: keyof Data
-  ) => {
+  const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isDesc = orderBy === property && order === "desc";
     setOrder(isDesc ? "asc" : "desc");
     setOrderBy(property);
@@ -345,9 +304,7 @@ export default function EnhancedTable() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
@@ -358,8 +315,7 @@ export default function EnhancedTable() {
 
   // const isSelected = (name: string) => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -402,11 +358,7 @@ export default function EnhancedTable() {
                           inputProps={{ "aria-labelledby": labelId }}
                         />
                       </TableCell> */}
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none">
+                      <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.name}
                       </TableCell>
                       <TableCell align="right">{row.calories}</TableCell>
