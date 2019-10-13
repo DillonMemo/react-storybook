@@ -30,7 +30,8 @@ export const defaultProps: IProps<object> = {
     paging: false,
     pageSize: 5,
     pageSizeOptions: [5, 10, 20],
-    sorting: true
+    sorting: true,
+    rowHover: true
   },
   stickyHeader: false
   //   style: {}

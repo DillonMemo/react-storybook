@@ -98,7 +98,7 @@ const columns = [
 const index: React.FunctionComponent = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
-      <TableElement
+      {/* <TableElement
         title={"Table Component Generator"}
         columns={[
           {
@@ -138,6 +138,16 @@ const index: React.FunctionComponent = () => {
             fat: 16.0
           }
         ]}
+        stickyHeader
+        options={{
+          sorting: true,
+          maxBodyHeight: 350
+        }}
+      /> */}
+      <TableElement
+        title={"Table Component Generator"}
+        columns={columns}
+        data={data}
         stickyHeader
         options={{
           sorting: true,

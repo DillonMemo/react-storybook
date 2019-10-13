@@ -19,10 +19,7 @@ export interface IProps<RowData extends object> {
   stickyHeader?: boolean;
   isLoading?: boolean;
   title?: string | React.ReactElement<any>;
-  onOrderChange?: (
-    orderBy: number,
-    orderDirection: "asc" | "desc" | ""
-  ) => void;
+  onOrderChange?: (orderBy: number, orderDirection: "asc" | "desc" | "") => void;
 }
 
 export interface Column<RowData extends object> {
@@ -32,16 +29,9 @@ export interface Column<RowData extends object> {
     minimumFractionDigits?: number;
     maximumFractionDigits?: number;
   };
-  costomSort?: (
-    data1: RowData,
-    data2: Rowdata,
-    type: "row" | "group"
-  ) => number;
+  costomSort?: (data1: RowData, data2: Rowdata, type: "row" | "group") => number;
   defaultSort?: "asc" | "desc";
-  emptyValue?:
-    | string
-    | React.ReactElement<any>
-    | ((data: any) => React.ReactElement<any> | string);
+  emptyValue?: string | React.ReactElement<any> | ((data: any) => React.ReactElement<any> | string);
   field?: keyof RowData;
   hidden?: boolean;
   render?: (data: RowData, type: "row" | "group") => any;
@@ -54,14 +44,7 @@ export interface Column<RowData extends object> {
     id: number;
   };
   title?: string | React.ReactElement<any>;
-  type?:
-    | "string"
-    | "boolean"
-    | "numeric"
-    | "date"
-    | "datetime"
-    | "time"
-    | "currency";
+  type?: "string" | "boolean" | "numeric" | "date" | "datetime" | "time" | "currency";
 }
 
 export interface Components {
@@ -96,6 +79,7 @@ export interface Options {
   paging?: boolean;
   pageSize?: number;
   pageSizeOptions?: number[];
+  rowHover?: boolean;
   sorting?: boolean;
 }
 export interface Query<RowData extends object> {
