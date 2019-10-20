@@ -8,14 +8,18 @@ interface IProps<RowDatas extends object> {
   components: Components;
   columns: Column<object>[];
   options: Options;
-  localization: { emptyDataSourceMessage: string; filterRow: object; editRow: object };
+  localization: {
+    emptyDataSourceMessage: string;
+    filterRow: object;
+    editRow: object;
+  };
   renderData: RowDatas[];
   pageSize: number;
   getFieldValue: (rowData: any, columnDef: any, lookup?: boolean) => any;
 }
 
 const Tabel_Body: React.ComponentType<IProps<any>> = props => {
-  console.log("TableBody props", props);
+  // console.log("TableBody props", props);
 
   /**
    * 데이터가 비었음을 나타내는 이벤트 핸들러
@@ -29,12 +33,17 @@ const Tabel_Body: React.ComponentType<IProps<any>> = props => {
         const localization: typeof props.localization = {
           ...props.localization
         };
-        console.log("Tabel_Body renderEmpty", localization);
+        // console.log("Tabel_Body renderEmpty", localization);
         if (renderData.length === 0) {
           return (
             <TableRow key={"empty-" + 0} style={{}}>
               <TableCell
-                style={{ paddingTop: 0, paddingBottom: 0, textAlign: "center" }}
+                style={{
+                  paddingTop: 0,
+                  paddingBottom: 0,
+                  textAlign: "center",
+                  fontSize: props.options && props.options.tableFontSize
+                }}
                 colSpan={props.columns.length}
                 key="empty-">
                 {localization.emptyDataSourceMessage}
@@ -45,9 +54,14 @@ const Tabel_Body: React.ComponentType<IProps<any>> = props => {
           return (
             <React.Fragment>
               {[...Array(emptyRowCount)].map((r, index) => (
-                <TableRow style={{ height: rowHeight }} key={"empty-" + index} />
+                <TableRow
+                  style={{ height: rowHeight }}
+                  key={"empty-" + index}
+                />
               ))}
-              {emptyRowCount > 0 && <TableRow style={{ height: 1 }} key={"empty-last1"} />}
+              {emptyRowCount > 0 && (
+                <TableRow style={{ height: 1 }} key={"empty-last1"} />
+              )}
             </React.Fragment>
           );
         }
@@ -66,7 +80,11 @@ const Tabel_Body: React.ComponentType<IProps<any>> = props => {
           if (props.components) {
             return (
               <props.components.BodyRow
-                key={rowData.tableData ? `key-${rowData.tableData.id}` : `not found tableData`}
+                key={
+                  rowData.tableData
+                    ? `key-${rowData.tableData.id}`
+                    : `not found tableData`
+                }
                 rowData={rowData}
                 index={index}
                 components={props.components}
@@ -78,7 +96,9 @@ const Tabel_Body: React.ComponentType<IProps<any>> = props => {
               />
             );
           } else {
-            console.warn("Table_Body renderUnGroupedRows : 지정된 컴포넌트 데이터가 없습니다.");
+            console.warn(
+              "Table_Body renderUnGroupedRows : 지정된 컴포넌트 데이터가 없습니다."
+            );
           }
         }
       });
@@ -100,13 +120,17 @@ const Tabel_Body: React.ComponentType<IProps<any>> = props => {
   // 남은 Row 개수 ex) pagesize : 5인데 data row는 2개 일경우 남은 row는 3개 - 아직 페이징 사용 안하고 생성만 해둠.
   const [emptyRowCount, setEmptyRowCount] = useState<number>(0);
   if (props.options && props.options.paging) {
-    setEmptyRowCount(props.pageSize - (props.renderData ? props.renderData.length : 0));
+    setEmptyRowCount(
+      props.pageSize - (props.renderData ? props.renderData.length : 0)
+    );
   }
 
   const groups = props.columns
     .filter(col => col.tableData && col.tableData.groupOrder > -1)
     .sort((col1, col2) =>
-      col1.tableData && col2.tableData ? col1.tableData.groupOrder - col2.tableData.groupOrder : 0
+      col1.tableData && col2.tableData
+        ? col1.tableData.groupOrder - col2.tableData.groupOrder
+        : 0
     );
 
   return (

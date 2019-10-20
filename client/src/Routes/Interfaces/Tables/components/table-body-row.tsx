@@ -1,5 +1,5 @@
 import React from "react";
-import { TableRow, TableCell } from "@material-ui/core";
+import { TableRow } from "@material-ui/core";
 import { Column, Options, Components } from "../types";
 
 interface IProps<RowData extends any> {
@@ -19,10 +19,13 @@ const Table_Body_Row: React.FunctionComponent<IProps<object>> = props => {
     const mapArr = props.columns
       .filter(
         columnDef =>
-          !columnDef.hidden && !(columnDef.tableData && columnDef.tableData.groupOrder > -1)
+          !columnDef.hidden &&
+          !(columnDef.tableData && columnDef.tableData.groupOrder > -1)
       )
       .sort((a, b) =>
-        a.tableData && b.tableData ? a.tableData.groupOrder - b.tableData.groupOrder : 0
+        a.tableData && b.tableData
+          ? a.tableData.groupOrder - b.tableData.groupOrder
+          : 0
       )
       .map((columnDef, index) => {
         const value = props.getFieldValue(props.rowData, columnDef);
@@ -30,11 +33,13 @@ const Table_Body_Row: React.FunctionComponent<IProps<object>> = props => {
         return (
           <props.components.Cell
             key={`Cell-${props.rowData.tableData &&
-              props.rowData.tableData.id}-${columnDef.tableData && columnDef.tableData.id}`}
+              props.rowData.tableData.id}-${columnDef.tableData &&
+              columnDef.tableData.id}`}
             size={size}
             columnDef={columnDef}
             value={value}
             rowData={props.rowData}
+            options={props.options}
           />
         );
       });
@@ -46,13 +51,17 @@ const Table_Body_Row: React.FunctionComponent<IProps<object>> = props => {
     return props.options.padding === "default" ? "medium" : "small";
   };
 
-  const onClickHandler = (rowData: typeof props.rowData) => (event: React.MouseEvent<unknown>) => {
+  const onClickHandler = (rowData: typeof props.rowData) => (
+    event: React.MouseEvent<unknown>
+  ) => {
     alert(JSON.stringify(rowData));
   };
 
   return (
     <>
-      <TableRow hover={props.options.rowHover} onClick={onClickHandler(props.rowData)}>
+      <TableRow
+        hover={props.options.rowHover}
+        onClick={onClickHandler(props.rowData)}>
         {renderColumns()}
       </TableRow>
     </>

@@ -5,19 +5,20 @@ import {
   TableCell,
   TableSortLabel
 } from "@material-ui/core";
-import { Column } from "../types";
+import { Column, Options } from "../types";
 
 interface IProps {
   classes: Record<"visuallyHidden", string>;
   columns: Column<object>[];
   sorting: boolean;
+  options: Options;
   orderBy: number;
   orderDirection: "" | "asc" | "desc";
   onOrderChange: (orderBy: number, orderDirection: "" | "asc" | "desc") => void;
 }
 
 const Table_Header: React.FunctionComponent<IProps> = props => {
-  console.log("TableHeader props", props);
+  // console.log("TableHeader props", props);
 
   const renderHeader = () => {
     const mapArr = props.columns
@@ -79,7 +80,8 @@ const Table_Header: React.FunctionComponent<IProps> = props => {
                 ? "right"
                 : "left"
             }
-            padding={true ? "default" : "none"}>
+            padding={true ? "default" : "none"}
+            style={{ fontSize: props.options && props.options.tableFontSize }}>
             {content}
           </TableCell>
         );

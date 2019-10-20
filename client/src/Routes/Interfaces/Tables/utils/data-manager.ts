@@ -28,7 +28,9 @@ export default class DataManager implements IProps<object> {
 
   constructor() {}
 
-  setData = (data: object[] | ((query: Query<object>) => Promise<QueryResult<object>>)) => {
+  setData = (
+    data: object[] | ((query: Query<object>) => Promise<QueryResult<object>>)
+  ) => {
     this.selectedCount = 0;
 
     this.data = (data as any[]).map((row, index) => {
@@ -75,7 +77,11 @@ export default class DataManager implements IProps<object> {
    * columnDef = {title: "번호", field: "index", tableData: {…}}
    * }
    */
-  getFieldValue = (rowData: any[string | number], columnDef: any, lookup = true) => {
+  getFieldValue = (
+    rowData: any[string | number],
+    columnDef: any,
+    lookup = true
+  ) => {
     let value =
       columnDef.field && typeof rowData[columnDef.field] !== "undefined"
         ? rowData[columnDef.field]
@@ -168,7 +174,11 @@ export default class DataManager implements IProps<object> {
    * @param b - 두번째 sort 비교 인자
    * @param type - sorting되는 column의 타입
    */
-  sort = <K extends number>(a: K, b: K, type?: { [x: number]: string }): number => {
+  sort = <K extends number>(
+    a: K,
+    b: K,
+    type?: { [x: number]: string }
+  ): number => {
     if (type === "numeric") {
       return a - b;
     } else {

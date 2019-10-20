@@ -1,6 +1,6 @@
 import React, { MouseEvent } from "react";
 import { TableCell, Icon } from "@material-ui/core";
-import { Column } from "../types/index";
+import { Column, Options } from "../types";
 import { Check, Remove } from "@material-ui/icons";
 import { CSSProperties } from "@material-ui/styles";
 
@@ -9,6 +9,7 @@ interface IProps {
   size: "small" | "medium" | undefined;
   value: string | Date | any;
   rowData: object;
+  options: Options;
 }
 
 const Table_Cell: React.FunctionComponent<IProps> = props => {
@@ -69,7 +70,9 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
         return props.value;
       }
     } else if (props.columnDef.type === "currency") {
-      const value: number = Number(props.value !== undefined ? props.value : "0");
+      const value: number = Number(
+        props.value !== undefined ? props.value : "0"
+      );
       return getCurrencyValue(props.columnDef.currencySetting, value);
     }
 
@@ -94,7 +97,9 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
         {
           style: "currency",
           currency:
-            currencySetting.currencyCode !== undefined ? currencySetting.currencyCode : "KRW",
+            currencySetting.currencyCode !== undefined
+              ? currencySetting.currencyCode
+              : "KRW",
           minimumFractionDigits:
             currencySetting.minimumFractionDigits !== undefined
               ? currencySetting.minimumFractionDigits
@@ -118,12 +123,14 @@ const Table_Cell: React.FunctionComponent<IProps> = props => {
       size={props.size}
       // {...props.cellProps}
       align={
-        ["numeric"].indexOf(props.columnDef.type ? props.columnDef.type : "") !== -1
+        ["numeric"].indexOf(
+          props.columnDef.type ? props.columnDef.type : ""
+        ) !== -1
           ? "right"
           : "left"
       }
       // onClick={handleClickCell}
-    >
+      style={{ fontSize: props.options && props.options.tableFontSize }}>
       {/* {props.children} */}
       {getRenderValue()}
     </TableCell>

@@ -1,5 +1,10 @@
 import React, { Ref, ReactElement, PropsWithChildren } from "react";
-import { Table_Header, Table_Body, Table_Body_Row, Table_Cell } from "../components";
+import {
+  Table_Header,
+  Table_Body,
+  Table_Body_Row,
+  Table_Cell
+} from "../components";
 import { IProps } from "../types";
 
 export const defaultProps: IProps<object> = {
@@ -12,7 +17,6 @@ export const defaultProps: IProps<object> = {
   },
   data: [],
   isLoading: false,
-  title: "Table Title",
   localization: {
     body: {
       filterRow: {},
@@ -34,5 +38,5 @@ export const defaultProps: IProps<object> = {
     rowHover: true
   },
   stickyHeader: false
-  //   style: {}
+  //   style: { }
 };
