@@ -93,12 +93,6 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     SortArrow: forwardRef<any, {}>((props, ref) => <ArrowUpward {...props} ref={ref} />)
   };
 
-  useEffect(() => {
-    if (dataManager.getRenderState().originalData !== props.data) {
-      setRenderState(dataManager.getRenderState());
-    }
-  }, [props.data]);
-
   return (
     <div style={{ padding: props.options && props.options.tablePadding }}>
       {props.title && <h1 style={{ margin: 0, padding: 0 }}>{props.title}</h1>}
