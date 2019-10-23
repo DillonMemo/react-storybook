@@ -9,6 +9,7 @@ import Home from "../../Routes/Home";
 import D3 from "../../Routes/D3";
 import Tables from "../../Routes/Interfaces/Tables";
 import Test from "../../Routes/Interfaces/_test";
+import FileInput from "../../Routes/Interfaces/Inputs/FileInput";
 
 const App: React.FC = ({ component }: any) => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
@@ -46,6 +47,7 @@ const Routes: React.FunctionComponent = () => (
     <Route path={"/d3"} component={D3} />
     <Route path={"/interfaces/tables"} component={Tables} />
     <Route path={"/interfaces/_test"} component={Test} />
+    <Route path={"/interfaces/inputs/fileinput"} component={FileInput} />
   </Switch>
 );
 

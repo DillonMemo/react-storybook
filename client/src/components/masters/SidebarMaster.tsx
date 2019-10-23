@@ -36,12 +36,29 @@ const SidebarMaster: React.FunctionComponent = () => {
               </li>
               <li className="chapter" style={{ marginTop: 10 }}>
                 <b>UI Components</b>
+
                 <ul className="articles">
-                  <li className="chapter">
-                    <Link to={"/interfaces/tables"}>Table Element</Link>
+                  <li className="chapter" style={{ marginTop: 10 }}>
+                    <b>Inputs</b>
+                    <ul className="articles">
+                      <li className="chapter">
+                        <Link to={"/interfaces/inputs/fileinput"}>File Input</Link>
+                      </li>
+                    </ul>
                   </li>
-                  <li className="chapter">
-                    <Link to={"/interfaces/_test"}>_Test</Link>
+                </ul>
+
+                <ul className="articles">
+                  <li className="chapter" style={{ marginTop: 10 }}>
+                    <b>Table</b>
+                    <ul className="articles">
+                      <li className="chapter">
+                        <Link to={"/interfaces/tables"}>Table Element</Link>
+                      </li>
+                      <li className="chapter">
+                        <Link to={"/interfaces/_test"}>_Test</Link>
+                      </li>
+                    </ul>
                   </li>
                 </ul>
               </li>

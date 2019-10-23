@@ -1,4 +1,4 @@
-import React, { useState, forwardRef } from "react";
+import React, { useState, forwardRef, useEffect } from "react";
 import { Paper, Table, Theme } from "@material-ui/core";
 import { IProps, Query } from "./types";
 import { defaultProps } from "./utils/default-props";
@@ -6,8 +6,7 @@ import DataManager from "./utils/data-manager";
 import { makeStyles, createStyles } from "@material-ui/styles";
 import { ArrowUpward } from "@material-ui/icons";
 
-const isRemoteData = (props?: IProps<object>) =>
-  !Array.isArray(props && props.data);
+const isRemoteData = (props?: IProps<object>) => !Array.isArray(props && props.data);
 
 const TableElement: React.FunctionComponent<IProps<object>> = props => {
   const dataManager = new DataManager();
@@ -37,9 +36,7 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     if (props) {
       defaultSortColumnIndex = props.columns.findIndex(a => a.defaultSort);
       defaultSortDirection =
-        defaultSortColumnIndex > -1
-          ? props.columns[defaultSortColumnIndex].defaultSort
-          : "";
+        defaultSortColumnIndex > -1 ? props.columns[defaultSortColumnIndex].defaultSort : "";
     }
 
     dataManager.setColumns(props.columns);
@@ -50,14 +47,10 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
     }
 
     // sorting
-    isInit &&
-      dataManager.changeOrder(defaultSortColumnIndex, defaultSortDirection);
+    isInit && dataManager.changeOrder(defaultSortColumnIndex, defaultSortDirection);
   };
 
-  const onChangeOrder = (
-    orderBy: number,
-    orderDirection: typeof query.orderDirection
-  ) => {
+  const onChangeOrder = (orderBy: number, orderDirection: typeof query.orderDirection) => {
     const newOrderBy = orderDirection === "" ? -1 : orderBy;
 
     dataManager.changeOrder(newOrderBy, orderDirection);
@@ -88,22 +81,23 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
         operator: "=",
         value: a.tableData && a.tableData.filterValue
       })),
-    orderBy: renderState.columns.find(
-      a => a.tableData && a.tableData.id === renderState.orderBy
-    ),
+    orderBy: renderState.columns.find(a => a.tableData && a.tableData.id === renderState.orderBy),
     orderDirection: renderState.orderDirection as "" | "asc" | "desc",
     page: 0,
-    pageSize:
-      props.options && props.options.pageSize ? props.options.pageSize : 5,
+    pageSize: props.options && props.options.pageSize ? props.options.pageSize : 5,
     search: renderState.searchText,
     totalCount: 0
   });
 
   const tableIcons: any = {
-    SortArrow: forwardRef<any, {}>((props, ref) => (
-      <ArrowUpward {...props} ref={ref} />
-    ))
+    SortArrow: forwardRef<any, {}>((props, ref) => <ArrowUpward {...props} ref={ref} />)
   };
+
+  useEffect(() => {
+    if (dataManager.getRenderState().originalData !== props.data) {
+      setRenderState(dataManager.getRenderState());
+    }
+  }, [props.data]);
 
   return (
     <div style={{ padding: props.options && props.options.tablePadding }}>
