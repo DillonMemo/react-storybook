@@ -56,6 +56,9 @@ const SidebarMaster: React.FunctionComponent = () => {
                         <Link to={"/interfaces/tables"}>Table Element</Link>
                       </li>
                       <li className="chapter">
+                        <Link to={"/interfaces/demo"}>Demo Table Element</Link>
+                      </li>
+                      <li className="chapter">
                         <Link to={"/interfaces/_test"}>_Test</Link>
                       </li>
                     </ul>
