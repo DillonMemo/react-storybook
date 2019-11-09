@@ -1,165 +1,68 @@
-import React, { useState } from "react";
-import xlsx from "xlsx";
+import React from "react";
+import { Column, Table, AutoSizer } from "react-virtualized";
+import { Paper } from "@material-ui/core";
 
-import TableElement from "../Tables/TableElement";
-import FileInput from "../Inputs/FileInput";
-import { LinearProgress } from "@material-ui/core";
+const list = [
+  { name: "Brian Vaughn", description: "Software engineer" }
+  // and so on...
+];
+interface Data {
+  calories: number;
+  carbs: number;
+  dessert: string;
+  fat: number;
+  id: number;
+  protein: number;
+}
+type Sample = [string, number, number, number, number];
 
-interface IProps {}
-interface IDataProps {
-  index: string;
-  SerialNumbers: string;
+const sample: Sample[] = [
+  ["Frozen yoghurt", 159, 6.0, 24, 4.0],
+  ["Ice cream sandwich", 237, 9.0, 37, 4.3],
+  ["Eclair", 262, 16.0, 24, 6.0],
+  ["Cupcake", 305, 3.7, 67, 4.3],
+  ["Gingerbread", 356, 16.0, 49, 3.9]
+];
+
+const rows: Data[] = [];
+
+for (let i = 0; i < 30000; i++) {
+  const renderSelection: Sample = sample[Math.floor(Math.random() * sample.length)];
+  const createData = (
+    id: number,
+    dessert: string,
+    calories: number,
+    fat: number,
+    carbs: number,
+    protein: number
+  ): Data => ({ id, dessert, calories, fat, carbs, protein });
+  rows.push(createData(i, ...renderSelection));
 }
 
-const Test: React.FunctionComponent<IProps> = props => {
-  // Data Table variable
-  const columns = [
-    {
-      title: "No.",
-      field: "index"
-    },
-    {
-      title: "유효",
-      field: "name"
-    },
-    {
-      title: "신규 시리얼 No.",
-      field: "SerialNumbers"
-    }
-  ];
-  const [dataSet, setDataSet] = useState<IDataProps[]>([
-    {
-      index: "1",
-      SerialNumbers: "12345"
-    },
-    {
-      index: "2",
-      SerialNumbers: "12346"
-    },
-    {
-      index: "3",
-      SerialNumbers: "12347"
-    },
-    {
-      index: "4",
-      SerialNumbers: "12348"
-    },
-    {
-      index: "5",
-      SerialNumbers: "12349"
-    },
-    {
-      index: "6",
-      SerialNumbers: "12350"
-    },
-    {
-      index: "7",
-      SerialNumbers: "12351"
-    },
-    {
-      index: "8",
-      SerialNumbers: "12352"
-    },
-    {
-      index: "9",
-      SerialNumbers: "12353"
-    },
-    {
-      index: "10",
-      SerialNumbers: "12354"
-    },
-    {
-      index: "11",
-      SerialNumbers: "12355"
-    },
-    {
-      index: "12",
-      SerialNumbers: "12356"
-    },
-    {
-      index: "13",
-      SerialNumbers: "12357"
-    }
-  ]);
-  const [percentage, setPercentage] = useState<number>(0);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const reader = new FileReader();
-    try {
-      const Files = e.currentTarget.files;
-      if (Files) {
-        debugger;
-        const File = Files[0];
-        const FileName = File.name;
-
-        reader.readAsArrayBuffer(Files[0]);
-
-        reader.onload = e => {
-          const result = new Uint8Array((e as any).currentTarget.result);
-          const wb = xlsx.read(result, { type: "array" });
-          wb.SheetNames.map((d, index) => {
-            let toCSV = xlsx.utils.sheet_to_csv(wb.Sheets[d]);
-            if (toCSV.includes("No.,시리얼 등록")) {
-              toCSV = toCSV.replace("No.,시리얼 등록", "index,SerialNumbers");
-            }
-            let toJson: any[] = JSON.parse(CsvToJson(toCSV));
-            toJson.pop();
-
-            if (dataSet) {
-              setDataSet([...dataSet, ...toJson]);
-            } else {
-              setDataSet(toJson);
-            }
-          });
-        };
-      }
-    } catch (error) {
-      console.error("handleFileChange error \n", error);
-      throw error;
-    }
-  };
-
-  const handlePercentageChange = async (): Promise<void> => {};
+const VirtualizedTable = () => {
   return (
-    <div>
-      <FileInput Id="ReadExcel" Name="ReadExcel" Accept=".xls, .xlsx" onChange={handleFileChange} />
-      <TableElement
-        columns={columns}
-        data={dataSet}
-        stickyHeader
-        options={{
-          sorting: true,
-          maxBodyHeight: "65vh",
-          isProgress: true,
-          tableFontSize: "1em",
-          tablePadding: "20px 10px"
-        }}
-      />
-      <LinearProgress variant="determinate" value={percentage} style={{ height: 15 }} />
-    </div>
+    <Paper style={{ height: 400, width: "100%" }}>
+      <AutoSizer>
+        {({ width, height }) => (
+          <>
+            <Table
+              ref="Table"
+              width={width}
+              height={height}
+              headerHeight={48}
+              rowHeight={48}
+              rowCount={rows.length}
+              rowGetter={({ index }) => rows[index]}
+              onRowClick={info => console.log(info)}>
+              <Column label="Id" dataKey="id" width={50} />
+              <Column label="Dessert" dataKey="dessert" width={200} />
+              <Column label={`Calories\u00A0(g)`} dataKey="calories" width={120} />
+            </Table>
+          </>
+        )}
+      </AutoSizer>
+    </Paper>
   );
 };
 
-const CsvToJson = (file: string): any => {
-  const lines = file.split("\n");
-
-  const result = [];
-
-  const headers = lines[0].split(",");
-
-  for (let i = 1; i < lines.length; i++) {
-    const obj: any = {};
-    const currentline = lines[i].split(",");
-
-    for (let j = 0; j < headers.length; j++) {
-      obj[headers[j]] = currentline[j];
-    }
-
-    result.push(obj);
-  }
-
-  const resultString = JSON.stringify(result);
-  return resultString;
-};
-
-export default Test;
+export default VirtualizedTable;
