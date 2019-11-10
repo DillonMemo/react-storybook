@@ -19,13 +19,11 @@
 
 ### Components :
 
-- [x] Table with material UI
-- [x] Table Icons
-- [x] Table header 고정
-- [x] Sorting
-- [ ] Filtering
-- [ ] Add Row edit
-- [ ] Input File button
+- [x] Input File button
+- [x] React Virtualized Table
+- [ ] React Virtualized Table with Material UI
+- [ ] React Virtualized Table > add row
+- [ ] React Virtualized Table > editable rows
 
 ### Memo :
 
