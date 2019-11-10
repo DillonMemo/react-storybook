@@ -1,0 +1,90 @@
+.baseBtn {
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  outline: 0;
+  position: relative;
+  align-items: center;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  justify-content: center;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+@mixin button_form() {
+  margin: 0 5px;
+  padding: 0.5em;
+  cursor: pointer;
+  width: 80px;
+}
+.button {
+  &__cancel {
+    @include button_form();
+    background-color: #fefefe;
+    color: #6e6e6e;
+  }
+
+  &__confirm {
+    @include button_form();
+    background-color: #f18282;
+    color: #fefefe;
+  }
+
+  &__basic {
+    @include button_form();
+    background-color: #b4b3b3;
+    color: #fefefe;
+  }
+
+  &__primary {
+    @include button_form();
+    background: #586eeb;
+    color: #fefefe;
+  }
+
+  &__mint {
+    @include button_form();
+    background-color: #80cbc4;
+    color: #fefefe;
+  }
+}
+.addRowBtn,
+.doneBtn {
+  flex: 0 0 auto;
+  color: rgba(0, 0, 0, 0.54);
+  padding: 12px;
+  overflow: visible;
+  font-size: 1.5rem;
+  text-align: center;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 50%;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.08);
+  }
+}
+.box_shadow_inset {
+  display: inline-block;
+  transition-duration: 0.3s;
+  -webkit-transition-duration: 0.3s;
+  -moz-transition-duration: 0.3s;
+  transition-property: box-shadow;
+  -webkit-transition-property: box-shadow;
+  -moz-transition-property: box-shadow;
+  box-shadow: inset 0 0 0 rgba(0, 0, 0, 0.3), 3px 3px 5px 0px rgba(0, 0, 0, 0.3);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+
+  &:hover {
+    box-shadow: inset 0px 0px 1px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0);
+  }
+}

@@ -27,20 +27,20 @@
   overflow: hidden;
 }
 
-.ReactVirtualized__Table__headerColumn,
-.ReactVirtualized__Table__rowColumn {
-  margin-right: 10px;
-  min-width: 0px;
-}
+// .ReactVirtualized__Table__headerColumn,
+// .ReactVirtualized__Table__rowColumn {
+//   margin-right: 10px;
+//   min-width: 0px;
+// }
 .ReactVirtualized__Table__rowColumn {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.ReactVirtualized__Table__headerColumn:first-of-type,
-.ReactVirtualized__Table__rowColumn:first-of-type {
-  margin-left: 10px;
-}
+// .ReactVirtualized__Table__headerColumn:first-of-type,
+// .ReactVirtualized__Table__rowColumn:first-of-type {
+//   margin-left: 10px;
+// }
 .ReactVirtualized__Table__sortableHeaderColumn {
   cursor: pointer;
 }
@@ -54,4 +54,10 @@
   height: 1em;
   width: 1em;
   fill: currentColor;
+}
+
+.tableRowHover {
+  &:hover {
+    background-color: #eeeeee;
+  }
 }

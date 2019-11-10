@@ -2,11 +2,9 @@ import React from "react";
 import { Column, Table, AutoSizer } from "react-virtualized";
 import { Paper } from "@material-ui/core";
 
-const list = [
-  { name: "Brian Vaughn", description: "Software engineer" }
-  // and so on...
-];
-interface Data {
+import MuiVirtualizedTable from "./MuiVirtualizedTable";
+
+export interface Data {
   calories: number;
   carbs: number;
   dessert: string;
@@ -39,28 +37,47 @@ for (let i = 0; i < 30000; i++) {
   rows.push(createData(i, ...renderSelection));
 }
 
+const columns = [
+  {
+    width: 200,
+    flexGrow: 1.0,
+    label: "Dessert",
+    dataKey: "dessert"
+  },
+  {
+    width: 120,
+    label: "Calories\u00A0(g)",
+    dataKey: "calories",
+    type: "numeric"
+  },
+  {
+    width: 120,
+    label: "Fat\u00A0(g)",
+    dataKey: "fat",
+    type: "numeric"
+  },
+  {
+    width: 120,
+    label: "Carbs\u00A0(g)",
+    dataKey: "carbs",
+    type: "numeric"
+  },
+  {
+    width: 120,
+    label: "Protein\u00A0(g)",
+    dataKey: "protein",
+    type: "numeric"
+  }
+];
+
 const VirtualizedTable = () => {
   return (
     <Paper style={{ height: 400, width: "100%" }}>
-      <AutoSizer>
-        {({ width, height }) => (
-          <>
-            <Table
-              ref="Table"
-              width={width}
-              height={height}
-              headerHeight={48}
-              rowHeight={48}
-              rowCount={rows.length}
-              rowGetter={({ index }) => rows[index]}
-              onRowClick={info => console.log(info)}>
-              <Column label="Id" dataKey="id" width={50} />
-              <Column label="Dessert" dataKey="dessert" width={200} />
-              <Column label={`Calories\u00A0(g)`} dataKey="calories" width={120} />
-            </Table>
-          </>
-        )}
-      </AutoSizer>
+      <MuiVirtualizedTable
+        columns={columns}
+        rowCount={rows.length}
+        rowGetter={({ index }) => rows[index]}
+      />
     </Paper>
   );
 };
