@@ -1,15 +1,8 @@
-import React from "react";
-import {
-  AutoSizer,
-  Table,
-  ColumnSizer,
-  Column,
-  TableHeaderProps,
-  TableCellProps
-} from "react-virtualized";
-import { Data } from ".";
-import { TableCell } from "@material-ui/core";
-import { MdModeEdit } from "react-icons/md";
+import React, { useRef, useState, useMemo, ChangeEvent } from "react";
+import { AutoSizer, Table, Column, TableHeaderProps, TableCellProps } from "react-virtualized";
+import { List } from ".";
+import { TableCell, IconButton, TextField } from "@material-ui/core";
+import { MdModeEdit, MdDone, MdCancel } from "react-icons/md";
 
 interface ColumnData {
   dataKey: string;
@@ -17,22 +10,133 @@ interface ColumnData {
   label: string;
   type?: string | "numeric";
   width: number;
-}
-
-interface Row {
-  index: number;
+  editable?: boolean;
 }
 
 interface IProps {
+  list: List[];
   columns: ColumnData[];
   headerHeight?: number;
-  onRowClick?: () => void;
-  rowCount: number;
-  rowGetter: (row: Row) => Data;
-  rowheight?: number;
+  rowHeight?: number;
+  rowUpdate: (id: any, updates: any) => void;
+  //   deletes: [];
 }
+
 const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
+  const _table = useRef(null);
+  const [editDatas, setEditDatas] = useState<any[]>(useMemo(() => [], []));
+
+  /**
+   * set a card to the edit card
+   * @param rowData - row data
+   */
+  const setEdit = (rowData: List) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("setEdit rowData :", rowData);
+    const reEditDatas: List[] = editDatas;
+    let index = reEditDatas.findIndex(data => {
+      return data.id === rowData.id;
+    });
+
+    console.log("setEdit index :", index);
+    if (index === -1) {
+      let card: List = {
+        id: rowData.id,
+        product: rowData.product,
+        productMaterial: rowData.productMaterial
+      };
+      let newEdit = [...reEditDatas, card];
+      setEditDatas(newEdit);
+
+      props.rowUpdate(rowData.id, { prop: "isEdit", value: true });
+    }
+  };
+
+  /**
+   * get a card from the edit card
+   * @param id - edit 배열에서 특정 값 찾을 id
+   */
+  const getEdit = (id: number | string) => {
+    const reEditDatas: List[] = editDatas;
+    let index = reEditDatas.findIndex(data => data.id === id);
+
+    return index !== -1 ? reEditDatas[index] : undefined;
+  };
+
+  /**
+   * 테이블 Row 업데이트
+   * @param id - a row id
+   * @param dataKey - data key in a row
+   */
+  const updateEdit = (id: number | string, dataKey: string) => (
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    console.log("updateEdit :", id, dataKey, e.target.value);
+
+    const reEditDatas: List[] = editDatas;
+
+    let index = reEditDatas.findIndex(data => data.id === id);
+    if (index !== -1) {
+      let newEdits = [
+        ...reEditDatas.slice(0, index),
+        { ...reEditDatas[index], [dataKey]: e.target.value },
+        ...reEditDatas.slice(index + 1)
+      ];
+
+      setEditDatas(newEdits);
+    }
+  };
+
+  /**
+   * save the edit mode to row
+   * @param id - a row id
+   */
+  const saveEdit = (id: number | string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("saveEdit", id);
+    const reEditDatas: List[] = editDatas;
+    let index = reEditDatas.findIndex(data => data.id === id);
+
+    if (index !== -1) {
+      let updates: List = {
+        id,
+        product: reEditDatas[index].product,
+        productMaterial: reEditDatas[index].productMaterial,
+        isEdit: false
+      };
+
+      props.rowUpdate(reEditDatas[index].id, updates);
+
+      // edit mode 제거
+      let newEdit = reEditDatas.slice(index + 1);
+
+      setEditDatas(newEdit);
+    }
+  };
+
+  /**
+   * cancel on edit of a row
+   * @param id - a row id
+   */
+  const cancelEdit = (id: number | string) => (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log("cancelEdit", id);
+
+    const editData: List[] = editDatas;
+    let index = editData.findIndex(data => data.id === id);
+
+    if (index !== -1) {
+      props.rowUpdate(editData[index].id, { prop: "isEdit", value: false });
+
+      let newEdit = editData.slice(index + 1);
+
+      setEditDatas(newEdit);
+    }
+  };
+
+  /**
+   * 테이블 헤더 랜더링
+   * @param headerProps - virtualized header props
+   */
   const headerRenderer = (headerProps: TableHeaderProps): JSX.Element => {
+    console.log("headerRenderer headerProps :", headerProps);
     return (
       <TableCell
         component="div"
@@ -52,7 +156,32 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
     );
   };
 
+  /**
+   * 테이블 셀 랜더링
+   * @param cellProps - virtualized cell props
+   */
   const cellRenderer = (cellProps: TableCellProps): JSX.Element => {
+    console.log("cellRenderer cellprops :", cellProps);
+    const {
+      columnData,
+      rowData
+    }: { columnData?: { editable?: boolean }; rowData: List } = cellProps;
+
+    let content = cellProps.cellData;
+
+    if (columnData!.editable && rowData.isEdit) {
+      let editData: any = getEdit(rowData.id);
+
+      content = (
+        <TextField
+          value={editData[cellProps.dataKey]}
+          type="text"
+          onChange={updateEdit(rowData.id, cellProps.dataKey)}
+        />
+      );
+    }
+
+    // if (cellProps.columnData.editable)
     return (
       <TableCell
         component="div"
@@ -65,35 +194,65 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
           alignItems: "center"
         }}
         align={"center"}>
-        {cellProps.cellData}
+        {content}
       </TableCell>
     );
   };
+
+  const actionRenderer = (cellProps: TableCellProps): JSX.Element => {
+    const { rowData }: { rowData: List } = cellProps;
+    let content: JSX.Element = rowData.isEdit ? (
+      <div>
+        <IconButton onClick={saveEdit(rowData.id)}>
+          <MdDone style={{ width: 20, height: 20 }} />
+        </IconButton>
+        <IconButton onClick={cancelEdit(rowData.id)}>
+          <MdCancel style={{ width: 20, height: 20 }} />
+        </IconButton>
+      </div>
+    ) : (
+      <div>
+        <IconButton onClick={setEdit(rowData)}>
+          <MdModeEdit style={{ width: 20, height: 20 }} />
+        </IconButton>
+      </div>
+    );
+
+    return (
+      <TableCell
+        component="div"
+        variant="body"
+        style={{
+          height: 48,
+          display: "flex",
+          flex: 1,
+          boxSizing: "border-box",
+          alignItems: "center",
+          flexDirection: "row-reverse"
+        }}
+        align={"center"}>
+        {content}
+      </TableCell>
+    );
+  };
+
   return (
     <AutoSizer>
       {({ width, height }) => (
         <>
           <Table
-            ref="Table"
+            ref={_table}
             width={width}
-            height={height - 48}
-            headerHeight={48}
-            rowHeight={props.rowheight ? props.rowheight : 48}
-            rowCount={props.rowCount}
-            rowGetter={props.rowGetter}
+            height={height}
+            headerHeight={props.headerHeight!}
+            rowHeight={props.rowHeight!}
+            rowCount={props.list.length}
+            rowGetter={({ index }) => props.list[index]}
             rowClassName={({ index }) => {
               return index !== -1 ? "tableRowHover" : "";
-            }}
-            onRowClick={info => console.log(info)}>
-            <Column
-              label="Id"
-              dataKey="id"
-              width={50}
-              headerRenderer={headerProps => headerRenderer({ ...headerProps })}
-              cellRenderer={cellProps => cellRenderer({ ...cellProps })}
-            />
+            }}>
             {props.columns.map((data, index) => {
-              const { label, dataKey, width, type, flexGrow } = data;
+              const { label, dataKey, width, type, flexGrow, editable } = data;
 
               return (
                 <Column
@@ -103,64 +262,18 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
                   flexGrow={flexGrow}
                   headerRenderer={headerProps => headerRenderer({ ...headerProps })}
                   cellRenderer={cellProps => cellRenderer({ ...cellProps })}
+                  columnData={{ editable }}
                 />
               );
             })}
             <Column
               label={``}
               dataKey={``}
-              width={80}
-              headerRenderer={headerProps => (
-                <TableCell
-                  component="div"
-                  className={``}
-                  variant="head"
-                  style={{
-                    height: 48,
-                    display: "flex",
-                    flex: 1,
-                    boxSizing: "border-box",
-                    alignItems: "center",
-                    fontWeight: "bold"
-                  }}
-                  align={"center"}></TableCell>
-              )}
-              cellRenderer={cellProps => (
-                <TableCell
-                  component="div"
-                  className={``}
-                  variant="head"
-                  style={{
-                    height: 48,
-                    display: "flex",
-                    flex: 1,
-                    boxSizing: "border-box",
-                    alignItems: "center",
-                    fontWeight: "bold"
-                  }}
-                  align={"center"}>
-                  <button
-                    type="button"
-                    className={`baseBtn doneBtn colorInherit`}
-                    onClick={() =>
-                      alert(`${cellProps.rowIndex} : ${JSON.stringify(cellProps.rowData)}`)
-                    }>
-                    <MdModeEdit key={cellProps.rowIndex} style={{ width: 20, height: 20 }} />
-                  </button>
-                </TableCell>
-              )}
+              width={150}
+              headerRenderer={headerProps => headerRenderer({ ...headerProps })}
+              cellRenderer={cellProps => actionRenderer({ ...cellProps })}
             />
           </Table>
-          <div
-            style={{
-              height: 48,
-              width,
-              flex: "flex",
-              boxSizing: "border-box",
-              alignItems: "center"
-            }}>
-            <span>TEST</span>
-          </div>
         </>
       )}
     </AutoSizer>

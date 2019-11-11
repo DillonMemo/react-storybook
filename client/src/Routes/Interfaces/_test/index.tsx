@@ -1,84 +1,103 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import { Column, Table, AutoSizer } from "react-virtualized";
+import update from "immutability-helper";
 import { Paper } from "@material-ui/core";
+import Faker from "faker";
 
 import MuiVirtualizedTable from "./MuiVirtualizedTable";
 
-export interface Data {
-  calories: number;
-  carbs: number;
-  dessert: string;
-  fat: number;
-  id: number;
-  protein: number;
+// Data - 1
+export interface List {
+  id: number | string;
+  product: string;
+  productMaterial: string;
+  isEdit?: boolean;
 }
-type Sample = [string, number, number, number, number];
-
-const sample: Sample[] = [
-  ["Frozen yoghurt", 159, 6.0, 24, 4.0],
-  ["Ice cream sandwich", 237, 9.0, 37, 4.3],
-  ["Eclair", 262, 16.0, 24, 6.0],
-  ["Cupcake", 305, 3.7, 67, 4.3],
-  ["Gingerbread", 356, 16.0, 49, 3.9]
-];
-
-const rows: Data[] = [];
-
+type listSample = [number, string, string];
+const list: List[] = [];
 for (let i = 0; i < 30000; i++) {
-  const renderSelection: Sample = sample[Math.floor(Math.random() * sample.length)];
-  const createData = (
-    id: number,
-    dessert: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number
-  ): Data => ({ id, dessert, calories, fat, carbs, protein });
-  rows.push(createData(i, ...renderSelection));
+  list.push({
+    id: i,
+    product: Faker.commerce.product(),
+    productMaterial: Faker.commerce.productMaterial(),
+    isEdit: false
+  });
 }
-
-const columns = [
+const listColumns = [
+  {
+    width: 120,
+    label: "ID",
+    dataKey: "id",
+    type: "numeric"
+  },
   {
     width: 200,
     flexGrow: 1.0,
-    label: "Dessert",
-    dataKey: "dessert"
+    label: "Product",
+    dataKey: "product",
+    editable: true
   },
   {
-    width: 120,
-    label: "Calories\u00A0(g)",
-    dataKey: "calories",
-    type: "numeric"
-  },
-  {
-    width: 120,
-    label: "Fat\u00A0(g)",
-    dataKey: "fat",
-    type: "numeric"
-  },
-  {
-    width: 120,
-    label: "Carbs\u00A0(g)",
-    dataKey: "carbs",
-    type: "numeric"
-  },
-  {
-    width: 120,
-    label: "Protein\u00A0(g)",
-    dataKey: "protein",
-    type: "numeric"
+    width: 200,
+    flexGrow: 1.0,
+    label: "ProductMaterial",
+    dataKey: "productMaterial",
+    editable: true
   }
 ];
 
 const VirtualizedTable = () => {
+  const [lists, setLists] = useState<List[]>(useMemo(() => list, []));
+  /**
+   * Applies updates to an card in th collection
+   * @param id - row data id
+   * @param updates - 업데이트할 property와 value
+   */
+  const rowUpdate = (id: string | number, updates: { prop: string; value: string | number }) => {
+    console.log("update", id, updates);
+
+    // defining method variables
+    let collection = undefined;
+
+    let index = lists.findIndex(data => data.id === id);
+
+    // 찾은 index 검사
+    if (index !== -1) {
+      if (Object.keys(updates).length > 2) {
+        console.log("update", updates);
+
+        let newData = Object.assign(lists[index], updates);
+
+        collection = [...lists.slice(0, index), { ...newData }, ...lists.slice(index + 1)];
+      } else {
+        // prop, value 업데이트
+        let { prop, value } = updates;
+
+        // 업데이트 적용
+        collection = [
+          ...lists.slice(0, index),
+          { ...lists[index], [prop]: value },
+          ...lists.slice(index + 1)
+        ];
+      }
+
+      console.log("rowUpdate", collection);
+
+      setLists(collection);
+    }
+  };
   return (
-    <Paper style={{ height: 400, width: "100%" }}>
-      <MuiVirtualizedTable
-        columns={columns}
-        rowCount={rows.length}
-        rowGetter={({ index }) => rows[index]}
-      />
-    </Paper>
+    <>
+      <Paper style={{ height: 400, width: "100%", marginTop: 20 }}>
+        <MuiVirtualizedTable
+          headerHeight={48}
+          rowHeight={48}
+          list={lists}
+          columns={listColumns}
+          rowUpdate={rowUpdate}
+        />
+      </Paper>
+    </>
   );
 };
 

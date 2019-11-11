@@ -23,7 +23,7 @@
 - [x] React Virtualized Table
 - [ ] React Virtualized Table with Material UI
 - [ ] React Virtualized Table > add row
-- [ ] React Virtualized Table > editable rows
+- [x] React Virtualized Table > editable rows
 
 ### Memo :
 
