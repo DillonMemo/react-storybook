@@ -51,6 +51,7 @@ const TableElement: React.FunctionComponent<IProps<object>> = props => {
   };
 
   const onChangeOrder = (orderBy: number, orderDirection: typeof query.orderDirection) => {
+    debugger;
     const newOrderBy = orderDirection === "" ? -1 : orderBy;
 
     dataManager.changeOrder(newOrderBy, orderDirection);

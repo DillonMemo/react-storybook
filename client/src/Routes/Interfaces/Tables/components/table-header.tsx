@@ -1,10 +1,5 @@
 import React, { useState, useEffect, forwardRef } from "react";
-import {
-  TableHead,
-  TableRow,
-  TableCell,
-  TableSortLabel
-} from "@material-ui/core";
+import { TableHead, TableRow, TableCell, TableSortLabel } from "@material-ui/core";
 import { Column, Options } from "../types";
 
 interface IProps {
@@ -22,22 +17,14 @@ const Table_Header: React.FunctionComponent<IProps> = props => {
 
   const renderHeader = () => {
     const mapArr = props.columns
-      .filter(
-        columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1)
-      )
+      .filter(columnDef => !columnDef.hidden && !(columnDef.tableData.groupOrder > -1))
       .sort((a, b) =>
-        a.tableData && b.tableData
-          ? a.tableData.columnOrder - b.tableData.columnOrder
-          : 0
+        a.tableData && b.tableData ? a.tableData.columnOrder - b.tableData.columnOrder : 0
       )
       .map((columnDef, index) => {
         let content = columnDef.title;
 
-        if (
-          columnDef.sorting !== false &&
-          props.sorting &&
-          columnDef.tableData
-        ) {
+        if (columnDef.sorting !== false && props.sorting && columnDef.tableData) {
           content = (
             <TableSortLabel
               active={props.orderBy === columnDef.tableData.id}
@@ -74,9 +61,7 @@ const Table_Header: React.FunctionComponent<IProps> = props => {
           <TableCell
             key={columnDef.tableData.id}
             align={
-              ["numeric"].indexOf(
-                columnDef.type ? columnDef.type : "undefined"
-              ) !== -1
+              ["numeric"].indexOf(columnDef.type ? columnDef.type : "undefined") !== -1
                 ? "right"
                 : "left"
             }

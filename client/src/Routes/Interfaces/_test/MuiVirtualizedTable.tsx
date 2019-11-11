@@ -1,30 +1,48 @@
 import React, { useRef, useState, useMemo, ChangeEvent } from "react";
 import { AutoSizer, Table, Column, TableHeaderProps, TableCellProps } from "react-virtualized";
-import { List } from ".";
-import { TableCell, IconButton, TextField } from "@material-ui/core";
+import { List, ColumnData } from ".";
+import { TableCell, IconButton, TextField, TableSortLabel } from "@material-ui/core";
 import { MdModeEdit, MdDone, MdCancel } from "react-icons/md";
-
-interface ColumnData {
-  dataKey: string;
-  flexGrow?: number;
-  label: string;
-  type?: string | "numeric";
-  width: number;
-  editable?: boolean;
-}
 
 interface IProps {
   list: List[];
   columns: ColumnData[];
   headerHeight?: number;
   rowHeight?: number;
-  rowUpdate: (id: any, updates: any) => void;
-  //   deletes: [];
+  rowUpdate: (id: string | number, updates: any) => void;
+  sorting: (orderBy: number, orderDirection: "asc" | "desc" | "") => void;
+}
+
+interface dataManager {
+  orderBy: number;
+  orderDirection: "asc" | "desc" | "";
 }
 
 const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
   const _table = useRef(null);
   const [editDatas, setEditDatas] = useState<any[]>(useMemo(() => [], []));
+  const [renderState, setRenderState] = useState<dataManager>(
+    useMemo<dataManager>(
+      () => ({
+        orderBy: -1,
+        orderDirection: ""
+      }),
+      []
+    )
+  );
+
+  /**
+   * order 변경 from column
+   * @param orderBy - order by header column
+   * @param orderDirection - "asc" | "desc" | ""
+   */
+  const onChangeOrder = (orderBy: number, orderDirection: typeof renderState.orderDirection) => {
+    const newOrderBy = orderDirection === "" ? -1 : orderBy;
+
+    setRenderState({ orderBy: newOrderBy, orderDirection });
+
+    props.sorting(newOrderBy, orderDirection);
+  };
 
   /**
    * set a card to the edit card
@@ -137,6 +155,37 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
    */
   const headerRenderer = (headerProps: TableHeaderProps): JSX.Element => {
     console.log("headerRenderer headerProps :", headerProps);
+    let content = headerProps.label;
+
+    if (headerProps.columnData) {
+      const { sortable, tableData }: ColumnData = headerProps.columnData;
+
+      if (sortable) {
+        content = (
+          <TableSortLabel
+            active={renderState.orderBy === tableData.id}
+            direction={renderState.orderDirection || "asc"}
+            onClick={() => {
+              const orderDirection =
+                tableData.id !== renderState.orderBy
+                  ? "asc"
+                  : renderState.orderDirection === "asc"
+                  ? "desc"
+                  : renderState.orderDirection === "desc"
+                  ? ""
+                  : renderState.orderDirection === ""
+                  ? "asc"
+                  : "desc";
+              console.log("orderDirection", orderDirection);
+
+              onChangeOrder(tableData.id, orderDirection);
+            }}>
+            {content}
+          </TableSortLabel>
+        );
+      }
+    }
+
     return (
       <TableCell
         component="div"
@@ -151,7 +200,7 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
           fontWeight: "bold"
         }}
         align={"center"}>
-        <span>{headerProps.label}</span>
+        {content}
       </TableCell>
     );
   };
@@ -235,7 +284,6 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
       </TableCell>
     );
   };
-
   return (
     <AutoSizer>
       {({ width, height }) => (
@@ -251,21 +299,36 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
             rowClassName={({ index }) => {
               return index !== -1 ? "tableRowHover" : "";
             }}>
-            {props.columns.map((data, index) => {
-              const { label, dataKey, width, type, flexGrow, editable } = data;
+            {props.columns
+              .sort((a, b) => a.tableData.columnOrder - b.tableData.columnOrder)
+              .map((columnDef, index) => {
+                const {
+                  label,
+                  dataKey,
+                  width,
+                  type,
+                  flexGrow,
+                  editable,
+                  sortable,
+                  tableData
+                } = columnDef;
+                return (
+                  <Column
+                    label={label}
+                    dataKey={dataKey}
+                    width={width}
+                    flexGrow={flexGrow}
+                    headerRenderer={headerProps => headerRenderer({ ...headerProps })}
+                    cellRenderer={cellProps => cellRenderer({ ...cellProps })}
+                    columnData={{
+                      editable,
+                      sortable,
+                      tableData
+                    }}
+                  />
+                );
+              })}
 
-              return (
-                <Column
-                  label={label}
-                  dataKey={dataKey}
-                  width={width}
-                  flexGrow={flexGrow}
-                  headerRenderer={headerProps => headerRenderer({ ...headerProps })}
-                  cellRenderer={cellProps => cellRenderer({ ...cellProps })}
-                  columnData={{ editable }}
-                />
-              );
-            })}
             <Column
               label={``}
               dataKey={``}
