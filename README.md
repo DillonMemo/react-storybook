@@ -25,6 +25,7 @@
 - [ ] React Virtualized Table > add row
 - [x] React Virtualized Table > editable rows
 - [ ] React Virtualized Table > sorting
+- [ ] React Virtualized Table > header cell with row & column span(merge)
 
 ### Memo :
 

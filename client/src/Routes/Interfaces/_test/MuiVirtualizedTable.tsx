@@ -9,8 +9,7 @@ interface IProps {
   columns: ColumnData[];
   headerHeight?: number;
   rowHeight?: number;
-  rowUpdate: (id: string | number, updates: any) => void;
-  sorting: (orderBy: number, orderDirection: "asc" | "desc" | "") => void;
+  updateData: (data: List[]) => void;
 }
 
 interface dataManager {
@@ -19,17 +18,59 @@ interface dataManager {
 }
 
 const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
-  const _table = useRef(null);
   const [editDatas, setEditDatas] = useState<any[]>(useMemo(() => [], []));
   const [renderState, setRenderState] = useState<dataManager>(
-    useMemo<dataManager>(
-      () => ({
-        orderBy: -1,
-        orderDirection: ""
-      }),
-      []
-    )
+    useMemo<dataManager>(() => ({ orderBy: -1, orderDirection: "" }), [])
   );
+
+  // Sorting
+  useMemo(() => {
+    console.log("sorting", renderState);
+
+    /**
+     * 정렬(sort) 연산을 하기 위한 결과값 반환
+     * @param rowData - get row Data
+     * @param columnDef - get column define
+     */
+    const getValue = (rowData: any[string | number], columnDef: ColumnData) => {
+      let value =
+        columnDef.dataKey && typeof rowData[columnDef.dataKey] !== "undefined"
+          ? rowData[columnDef.dataKey]
+          : "";
+      return value;
+    };
+
+    /**
+     * @tutorial - 결과가 -1 이면 DESC, 1 이면 ASC
+     * @param a - 첫번째 sort 비교 인자
+     * @param b - 두번째 sort 비교 인자
+     * @param type - sorting되는 column의 타입
+     */
+    const sort = <K extends number>(a: any, b: K, type?: { [x: number]: string }): number => {
+      if (type === "numeric") {
+        return a - b;
+      } else {
+        if (a !== b) {
+          if (!a) return -1;
+          if (!b) return 1;
+        }
+      }
+      return a < b ? -1 : a > b ? 1 : 0;
+    };
+
+    const { orderBy, orderDirection } = renderState;
+
+    const columnDef: ColumnData =
+      orderBy !== -1
+        ? props.columns.find(col => col.tableData.id === renderState.orderBy)!
+        : props.columns.find(col => col.tableData.id === 0)!;
+
+    props.list.sort(
+      orderDirection === "desc"
+        ? (a, b) => sort(getValue(b, columnDef), getValue(a, columnDef), columnDef.type)
+        : (a, b) => sort(getValue(a, columnDef), getValue(b, columnDef), columnDef.type)
+    );
+  }, [renderState]);
 
   /**
    * order 변경 from column
@@ -40,8 +81,48 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
     const newOrderBy = orderDirection === "" ? -1 : orderBy;
 
     setRenderState({ orderBy: newOrderBy, orderDirection });
+  };
 
-    props.sorting(newOrderBy, orderDirection);
+  /**
+   * Applies updates to an card in th collection - 컬렉션의 row에  업데이트를 적용시킵니다.
+   * @param id - row data id
+   * @param updates - 업데이트할 property와 value
+   */
+  const rowUpdate = (
+    id: string | number,
+    updates: { prop: string; value: string | number } | any
+  ) => {
+    // defining method variables
+    let collection = undefined;
+
+    let index = props.list.findIndex(data => data.id === id);
+
+    // 찾은 index 검사
+    if (index !== -1) {
+      if (Object.keys(updates).length > 2) {
+        console.log("update", updates);
+
+        let newData = Object.assign(props.list[index], updates);
+
+        collection = [
+          ...props.list.slice(0, index),
+          { ...newData },
+          ...props.list.slice(index + 1)
+        ];
+      } else {
+        // prop, value 업데이트
+        const { prop, value } = updates;
+
+        // 업데이트 적용
+        collection = [
+          ...props.list.slice(0, index),
+          { ...props.list[index], [prop]: value },
+          ...props.list.slice(index + 1)
+        ];
+      }
+
+      props.updateData(collection);
+    }
   };
 
   /**
@@ -51,21 +132,18 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
   const setEdit = (rowData: List) => (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log("setEdit rowData :", rowData);
     const reEditDatas: List[] = editDatas;
-    let index = reEditDatas.findIndex(data => {
-      return data.id === rowData.id;
-    });
+    let index = reEditDatas.findIndex(data => data.id === rowData.id);
 
-    console.log("setEdit index :", index);
     if (index === -1) {
-      let card: List = {
+      let data: List = {
         id: rowData.id,
         product: rowData.product,
         productMaterial: rowData.productMaterial
       };
-      let newEdit = [...reEditDatas, card];
+      let newEdit = [...reEditDatas, data];
       setEditDatas(newEdit);
 
-      props.rowUpdate(rowData.id, { prop: "isEdit", value: true });
+      rowUpdate(rowData.id, { prop: "isEdit", value: true });
     }
   };
 
@@ -75,7 +153,7 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
    */
   const getEdit = (id: number | string) => {
     const reEditDatas: List[] = editDatas;
-    let index = reEditDatas.findIndex(data => data.id === id);
+    const index = reEditDatas.findIndex(data => data.id === id);
 
     return index !== -1 ? reEditDatas[index] : undefined;
   };
@@ -88,8 +166,6 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
   const updateEdit = (id: number | string, dataKey: string) => (
     e: ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("updateEdit :", id, dataKey, e.target.value);
-
     const reEditDatas: List[] = editDatas;
 
     let index = reEditDatas.findIndex(data => data.id === id);
@@ -109,7 +185,6 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
    * @param id - a row id
    */
   const saveEdit = (id: number | string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("saveEdit", id);
     const reEditDatas: List[] = editDatas;
     let index = reEditDatas.findIndex(data => data.id === id);
 
@@ -121,10 +196,10 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
         isEdit: false
       };
 
-      props.rowUpdate(reEditDatas[index].id, updates);
+      rowUpdate(reEditDatas[index].id, updates);
 
       // edit mode 제거
-      let newEdit = reEditDatas.slice(index + 1);
+      let newEdit = [...reEditDatas.slice(0, index), ...reEditDatas.slice(index + 1)];
 
       setEditDatas(newEdit);
     }
@@ -135,15 +210,13 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
    * @param id - a row id
    */
   const cancelEdit = (id: number | string) => (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log("cancelEdit", id);
-
     const editData: List[] = editDatas;
     let index = editData.findIndex(data => data.id === id);
 
     if (index !== -1) {
-      props.rowUpdate(editData[index].id, { prop: "isEdit", value: false });
+      rowUpdate(editData[index].id, { prop: "isEdit", value: false });
 
-      let newEdit = editData.slice(index + 1);
+      let newEdit = [...editData.slice(0, index), ...editData.slice(index + 1)];
 
       setEditDatas(newEdit);
     }
@@ -154,12 +227,12 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
    * @param headerProps - virtualized header props
    */
   const headerRenderer = (headerProps: TableHeaderProps): JSX.Element => {
-    console.log("headerRenderer headerProps :", headerProps);
+    // console.log("headerRenderer headerProps :");
+    let headerCnt = 0;
     let content = headerProps.label;
 
     if (headerProps.columnData) {
       const { sortable, tableData }: ColumnData = headerProps.columnData;
-
       if (sortable) {
         content = (
           <TableSortLabel
@@ -188,6 +261,11 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
 
     return (
       <TableCell
+        key={`header-${
+          headerProps.columnData
+            ? headerProps.columnData.tableData.id
+            : headerProps.columnData.tableData.key
+        }`}
         component="div"
         className={``}
         variant="head"
@@ -197,7 +275,8 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
           flex: 1,
           boxSizing: "border-box",
           alignItems: "center",
-          fontWeight: "bold"
+          fontWeight: "bold",
+          fontSize: "1.4rem"
         }}
         align={"center"}>
         {content}
@@ -210,7 +289,7 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
    * @param cellProps - virtualized cell props
    */
   const cellRenderer = (cellProps: TableCellProps): JSX.Element => {
-    console.log("cellRenderer cellprops :", cellProps);
+    // console.log("cellRenderer cellprops :");
     const {
       columnData,
       rowData
@@ -230,9 +309,9 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
       );
     }
 
-    // if (cellProps.columnData.editable)
     return (
       <TableCell
+        key={`body-${rowData.id}`}
         component="div"
         variant="body"
         style={{
@@ -240,16 +319,22 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
           display: "flex",
           flex: 1,
           boxSizing: "border-box",
-          alignItems: "center"
+          alignItems: "center",
+          fontSize: "1.4rem"
         }}
         align={"center"}>
-        {content}
+        {cellProps.dataKey === "id" ? content + 1 : content}
       </TableCell>
     );
   };
 
+  /**
+   * 테이블 edit 버튼 랜더링
+   * @param cellProps - virtualized cell props
+   */
   const actionRenderer = (cellProps: TableCellProps): JSX.Element => {
     const { rowData }: { rowData: List } = cellProps;
+
     let content: JSX.Element = rowData.isEdit ? (
       <div>
         <IconButton onClick={saveEdit(rowData.id)}>
@@ -284,16 +369,16 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
       </TableCell>
     );
   };
+
   return (
     <AutoSizer>
       {({ width, height }) => (
         <>
           <Table
-            ref={_table}
             width={width}
             height={height}
-            headerHeight={props.headerHeight!}
-            rowHeight={props.rowHeight!}
+            headerHeight={props.headerHeight ? props.headerHeight : 48}
+            rowHeight={props.rowHeight ? props.rowHeight : 48}
             rowCount={props.list.length}
             rowGetter={({ index }) => props.list[index]}
             rowClassName={({ index }) => {
@@ -312,29 +397,29 @@ const MuiVirtualizedTable: React.FunctionComponent<IProps> = props => {
                   sortable,
                   tableData
                 } = columnDef;
+
                 return (
                   <Column
+                    key={`virtualized-column-${index}`}
                     label={label}
                     dataKey={dataKey}
                     width={width}
                     flexGrow={flexGrow}
                     headerRenderer={headerProps => headerRenderer({ ...headerProps })}
                     cellRenderer={cellProps => cellRenderer({ ...cellProps })}
-                    columnData={{
-                      editable,
-                      sortable,
-                      tableData
-                    }}
+                    columnData={{ editable, sortable, tableData }}
                   />
                 );
               })}
 
             <Column
+              key={`virtualized-column-edit`}
               label={``}
               dataKey={``}
               width={150}
               headerRenderer={headerProps => headerRenderer({ ...headerProps })}
               cellRenderer={cellProps => actionRenderer({ ...cellProps })}
+              columnData={{ tableData: { key: "edit" } }}
             />
           </Table>
         </>
