@@ -29,6 +29,8 @@
 - [ ] 연관 키워드 검색 UI
 - [ ] file(PDF, etc...) download
 - [ ] text editor tool (markdown 등등)
+- [ ] Skeleton
+- [ ] NProgress
 
 ### Memo :
 
