@@ -20,17 +20,12 @@
 ### Components :
 
 - [x] Input File button
-- [x] React Virtualized Table
-- [ ] React Virtualized Table with Material UI
-- [ ] React Virtualized Table > add row
-- [x] React Virtualized Table > editable rows
-- [ ] React Virtualized Table > sorting
-- [ ] React Virtualized Table > header cell with row & column span(merge)
 - [ ] 연관 키워드 검색 UI
 - [ ] file(PDF, etc...) download
 - [ ] text editor tool (markdown 등등)
 - [ ] Skeleton
 - [ ] NProgress
+- [ ] Virtualized MultiGrid
 
 ### Memo :
 
