@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
 
+import rootReducer from "../../modules";
 import SidebarMaster from "../masters/SidebarMaster";
 import BodyMaster from "../masters/BodyMaster";
 
 // Routes
-import Home from "../../Routes/Home";
-import D3 from "../../Routes/D3";
-import Tables from "../../Routes/Interfaces/Tables";
-import Test from "../../Routes/Interfaces/_test";
-import FileInput from "../../Routes/Interfaces/Inputs/FileInput";
-import DemoTable from "../../Routes/Interfaces/Tables/demo";
+import Home from "../../routes/Home";
+import D3 from "../../routes/D3";
+import Test from "../../routes/Interfaces/_test";
 
-const App: React.FC = ({ component }: any) => {
+const store = createStore(rootReducer);
+
+const App: React.FC = () => {
   const [isSummary, setIsSummary] = useState<boolean>(true);
 
   const onChangeIsSummary = () => {
@@ -29,7 +31,7 @@ const App: React.FC = ({ component }: any) => {
     return elementClasses.join(" ");
   };
   return (
-    <React.Fragment>
+    <Provider store={store}>
       <Router>
         <div className={getToggleSummaryClass()}>
           <SidebarMaster />
@@ -38,7 +40,7 @@ const App: React.FC = ({ component }: any) => {
           </BodyMaster>
         </div>
       </Router>
-    </React.Fragment>
+    </Provider>
   );
 };
 
@@ -46,10 +48,7 @@ const Routes: React.FunctionComponent = () => (
   <Switch>
     <Route path={"/"} exact={true} component={Home} />
     <Route path={"/d3"} component={D3} />
-    <Route path={"/interfaces/tables"} component={Tables} />
-    <Route path={"/interfaces/demo"} component={DemoTable} />
     <Route path={"/interfaces/_test"} component={Test} />
-    <Route path={"/interfaces/inputs/fileinput"} component={FileInput} />
   </Switch>
 );
 

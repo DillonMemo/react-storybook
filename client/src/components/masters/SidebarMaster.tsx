@@ -7,16 +7,11 @@ const SidebarMaster: React.FunctionComponent = () => {
   return (
     <div className="template-summary">
       <nav>
-        <ul className="summary">
-          <li className="divider"></li>
-          <li className="chapter">
-            <Link to={"/"} style={{ backgroundColor: "lightgray" }}>
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  marginBottom: 10
-                }}>
+        <ul className={`summary`}>
+          <li className={`divider`}></li>
+          <li className={`chapter`}>
+            <Link to={`/`} style={{ backgroundColor: "lightgray" }}>
+              <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
                 <img
                   src={Icon_Pencil}
                   alt="Icon_Pencil"
@@ -25,8 +20,8 @@ const SidebarMaster: React.FunctionComponent = () => {
               </div>
               <div style={{ fontWeight: "bold" }}>My React Storybook - 장동원</div>
             </Link>
-            <ul className="articles">
-              <li className="chapter" style={{ marginTop: 10 }}>
+            <ul className={`articles`}>
+              <li className={`chapter`} style={{ marginTop: 10 }}>
                 <b>Libraries</b>
                 <ul className="articles">
                   <li className="chapter">
@@ -35,33 +30,13 @@ const SidebarMaster: React.FunctionComponent = () => {
                 </ul>
               </li>
               <li className="chapter" style={{ marginTop: 10 }}>
-                <b>UI Components</b>
+                <b>Bootstrap UI</b>
 
                 <ul className="articles">
-                  <li className="chapter" style={{ marginTop: 10 }}>
-                    <b>Inputs</b>
-                    <ul className="articles">
-                      <li className="chapter">
-                        <Link to={"/interfaces/inputs/fileinput"}>File Input</Link>
-                      </li>
-                    </ul>
+                  <li className="chapter">
+                    <Link to={"/interfaces/_test"}>_Test</Link>
                   </li>
                 </ul>
-
-                <ul className="articles">
-                  <li className="chapter" style={{ marginTop: 10 }}>
-                    <b>Table</b>
-                    <ul className="articles">
-                      <li className="chapter">
-                        <Link to={"/interfaces/tables"}>Table Element</Link>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
-
-                <li className="chapter">
-                  <Link to={"/interfaces/_test"}>_Test</Link>
-                </li>
               </li>
             </ul>
           </li>

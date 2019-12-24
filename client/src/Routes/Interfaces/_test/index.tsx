@@ -1,94 +1,86 @@
-import React, { useState, useMemo } from "react";
-import { Paper } from "@material-ui/core";
-import Faker from "faker";
+import React, { useEffect, useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Button, Dropdown } from "react-bootstrap";
 
-import MuiVirtualizedTable from "./MuiVirtualizedTable";
-import { values } from "d3";
+import { RootState } from "../../../modules";
+import { increase, decrease, increaseBy } from "../../../modules/counter";
 
-// Data - 1
-export interface List {
-  id: number | string;
-  product: string;
-  productMaterial: string;
-  isEdit?: boolean;
-}
-type listSample = [number, string, string];
-const list: List[] = [];
-for (let i = 0; i < 30000; i++) {
-  list.push({
-    id: i,
-    product: Faker.commerce.product(),
-    productMaterial: Faker.commerce.productMaterial(),
-    isEdit: false
-  });
-}
+/**
+ * Custom Hooks
+ */
+const useCounter = () => {
+  const count = useSelector((state: RootState) => state.counter.count);
+  const dispatch = useDispatch();
 
-export interface ColumnData {
-  dataKey: string;
-  flexGrow?: number;
-  label: string;
-  type?: string | "numeric";
-  width: number;
-  editable?: boolean;
-  sortable?: boolean;
-  tableData: {
-    columnOrder: number;
-    id: number;
+  const onIncrease = useCallback(() => dispatch(increase()), [dispatch]);
+  const onDecrease = useCallback(() => dispatch(decrease()), [dispatch]);
+  const onIncreaseBy = useCallback((diff: number) => dispatch(increaseBy(diff)), [dispatch]);
+
+  return {
+    count,
+    onIncrease,
+    onDecrease,
+    onIncreaseBy
   };
-}
-
-let listColumns: any[] = [
-  {
-    width: 120,
-    label: "ID",
-    dataKey: "id",
-    type: "numeric"
-  },
-  {
-    width: 200,
-    flexGrow: 1.0,
-    label: "Product",
-    dataKey: "product",
-    editable: true
-  },
-  {
-    width: 200,
-    flexGrow: 1.0,
-    label: "ProductMaterial",
-    dataKey: "productMaterial",
-    editable: true
-  }
-];
-
-const setColumns = (columns: any[]): ColumnData[] => {
-  return listColumns.map((columnDef, index) => ({
-    ...columnDef,
-    sortable: true,
-    tableData: {
-      ...columnDef.tableData,
-      columnOrder: index,
-      id: index
-    }
-  }));
 };
 
-const VirtualizedTable = () => {
-  const [cols, setCols] = useState<ColumnData[]>(useMemo(() => setColumns(listColumns), []));
-  const [lists, setLists] = useState<List[]>(useMemo(() => list, []));
+type TestProps = {};
+
+const Test: React.FC<TestProps> = ({}) => {
+  const { count, onIncrease, onDecrease, onIncreaseBy } = useCounter();
 
   return (
-    <>
-      <Paper style={{ height: 400, width: "100%", marginTop: 20 }}>
-        <MuiVirtualizedTable
-          headerHeight={48}
-          rowHeight={48}
-          list={lists}
-          updateData={(data: List[]) => setLists(data)}
-          columns={cols}
-        />
-      </Paper>
-    </>
+    <div className={`p-3`}>
+      <h2 style={{ margin: 0, padding: 0 }}>{count}</h2>
+      <button onClick={onIncrease}>+1</button>
+      <button onClick={onDecrease}>-1</button>
+      <button onClick={() => onIncreaseBy(5)}>+5</button>
+
+      <h2>Buttons</h2>
+      <div className="p-1">
+        <Button variant="primary" className="mr-1">
+          Primary
+        </Button>
+        <Button variant="secondary" className="mr-1">
+          Secondary
+        </Button>
+        <Button variant="success" className="mr-1">
+          Success
+        </Button>
+        <Button variant="warning" className="mr-1">
+          Warning
+        </Button>
+        <Button variant="danger" className="mr-1">
+          Danger
+        </Button>
+        <Button variant="info" className="mr-1">
+          Info
+        </Button>
+        <Button variant="light" className="mr-1">
+          Light
+        </Button>
+        <Button variant="dark" className="mr-1">
+          Dark
+        </Button>
+        <Button variant="link" className="mr-1">
+          Link
+        </Button>
+      </div>
+
+      <h2>DropDown</h2>
+      <Dropdown>
+        <Dropdown.Toggle variant="light" id="dropdown-basic" style={{ borderColor: "black" }}>
+          Dropdown Button
+        </Dropdown.Toggle>
+
+        <Dropdown.Menu>
+          <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+          <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+          <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
   );
 };
 
-export default VirtualizedTable;
+export default Test;
