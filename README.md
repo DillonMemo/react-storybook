@@ -26,6 +26,8 @@
 - [ ] Skeleton
 - [ ] NProgress
 - [ ] Virtualized MultiGrid
+- [ ] Virtualized sorting
+- [ ] Virtualized responsive width
 
 ### Memo :
 
