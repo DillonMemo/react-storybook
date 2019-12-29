@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Provider } from "react-redux";
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, compose } from "redux";
+import thunkMiddleware from "redux-thunk";
+import promiseMiddleware from "redux-promise-middleware";
+import { createLogger } from "redux-logger";
 
 import rootReducer from "../../modules";
 import SidebarMaster from "../masters/SidebarMaster";
@@ -13,9 +16,16 @@ import D3 from "../../routes/D3";
 import Test from "../../routes/Interfaces/_test";
 import NProgress from "../../routes/Interfaces/nprogress";
 import Skeleton from "../../routes/Interfaces/skeleton";
-import LoadingBar from "react-redux-loading-bar";
 
-const store = createStore(
+const createStoreWithMiddleware = compose(
+  applyMiddleware(
+    thunkMiddleware, // lets us dispatch() functions
+    promiseMiddleware, // resolves promises
+    createLogger() // log actions in console
+  )
+)(createStore);
+
+const store = createStoreWithMiddleware(
   rootReducer
   // promise middleware
 );
@@ -38,9 +48,6 @@ const App: React.FC = () => {
   };
   return (
     <Provider store={store}>
-      <header>
-        <LoadingBar style={{ backgroundColor: "blue", height: 3 }} />
-      </header>
       <Router>
         <div className={getToggleSummaryClass()}>
           <SidebarMaster />

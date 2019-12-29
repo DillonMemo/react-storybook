@@ -1,11 +1,11 @@
 import { combineReducers } from "redux";
-import { loadingBarReducer } from "react-redux-loading-bar";
 
 import counter from "./counter";
+import photos from "./samplephotos";
 
 const rootReducer = combineReducers({
   counter,
-  loadingBar: loadingBarReducer
+  photos
 });
 
 export default rootReducer;
