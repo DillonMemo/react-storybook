@@ -54,6 +54,7 @@
     "node-sass": "^4.12.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-icons": "^3.8.0",
+    "react-redux-loading-bar": "^4.6.0",
     "react-virtualized": "^9.21.1",
     "typesafe-actions": "^5.1.0"
   }

@@ -9,6 +9,14 @@ const initialState: CounterState = {
 
 /**
  * Reducer
+ * ex)
+ * const counter = (state: counterState = initialState, action: CounterAction) => {
+ *    switch (action.type) {
+ *      case INCREASE:
+ *        return ({count: state.count + 1})
+ *      // ...
+ *    }
+ * }
  */
 const counter = createReducer<CounterState, CounterAction>(initialState, {
   [INCREASE]: state => ({ count: state.count + 1 }),

@@ -1,9 +1,11 @@
 import { combineReducers } from "redux";
+import { loadingBarReducer } from "react-redux-loading-bar";
 
 import counter from "./counter";
 
 const rootReducer = combineReducers({
-  counter
+  counter,
+  loadingBar: loadingBarReducer
 });
 
 export default rootReducer;
