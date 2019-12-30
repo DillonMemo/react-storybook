@@ -50,6 +50,15 @@ const SidebarMaster: React.FunctionComponent = () => {
                   </li>
                 </ul>
               </li>
+              <li className="chapter" style={{ marginTop: 10 }}>
+                <b>Redux</b>
+
+                <ul className="articles">
+                  <li className="chapter">
+                    <Link to={"/loader"}>Loader</Link>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </li>
           <li className="divider"></li>

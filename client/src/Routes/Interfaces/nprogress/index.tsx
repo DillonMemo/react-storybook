@@ -9,7 +9,9 @@ import Progress from "./Proress";
 
 const callFakeAPI = (delay: number) =>
   new Promise(resolve => {
+    console.log("1");
     setTimeout(resolve, delay);
+    console.log("2");
   });
 
 const NProgress = () => {

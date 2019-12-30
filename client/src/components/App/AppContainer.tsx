@@ -16,8 +16,17 @@ import D3 from "../../routes/D3";
 import Test from "../../routes/Interfaces/_test";
 import NProgress from "../../routes/Interfaces/nprogress";
 import Skeleton from "../../routes/Interfaces/skeleton";
+import Loader from "../../routes/Loader";
 
-const createStoreWithMiddleware = compose(
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const createStoreWithMiddleware = composeEnhancers(
   applyMiddleware(
     thunkMiddleware, // lets us dispatch() functions
     promiseMiddleware, // resolves promises
@@ -67,6 +76,7 @@ const Routes: React.FunctionComponent = () => (
     <Route path={"/interfaces/_test"} component={Test} />
     <Route path={"/interfaces/nprogress"} component={NProgress} />
     <Route path={"/interfaces/skeleton"} component={Skeleton} />
+    <Route path={"/loader"} component={Loader} />
   </Switch>
 );
 

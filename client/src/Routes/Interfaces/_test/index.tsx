@@ -4,7 +4,6 @@ import { Button, Dropdown } from "react-bootstrap";
 
 import { RootState } from "../../../modules";
 import { increase, decrease, increaseBy } from "../../../modules/counter";
-import { FETCHPHOTOS, PhotosState } from "../../../modules/samplephotos";
 
 /**
  * Custom Hooks
@@ -28,14 +27,9 @@ const useCounter = () => {
 type TestProps = {};
 
 const Test: React.FC<TestProps> = ({}) => {
-  const photos: PhotosState[] = useSelector((state: RootState) => state.photos);
   const dispatch = useDispatch();
 
   const { count, onIncrease, onDecrease, onIncreaseBy } = useCounter();
-
-  const onPhotos = () => {
-    dispatch(FETCHPHOTOS());
-  };
 
   return (
     <div className={`p-3`}>
@@ -44,19 +38,9 @@ const Test: React.FC<TestProps> = ({}) => {
       <button onClick={onDecrease}>-1</button>
       <button onClick={() => onIncreaseBy(5)}>+5</button>
 
-      <div style={{ display: "flex" }}>
-        {photos.length > 0
-          ? photos.map(photo => (
-              <div className="flex-auto" key={photo.id}>
-                <img src={photo.thumbnailUrl} alt={photo.title} />
-              </div>
-            ))
-          : null}
-      </div>
-
       <h2>Buttons</h2>
       <div className="p-1">
-        <Button variant="primary" className="mr-1" onClick={onPhotos}>
+        <Button variant="primary" className="mr-1">
           Primary
         </Button>
         <Button variant="secondary" className="mr-1">
