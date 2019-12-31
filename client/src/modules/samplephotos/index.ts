@@ -13,32 +13,35 @@ const FETCH = "photos/FETCH";
 export const FETCHPHOTOS = createAction(FETCH)<Promise<any>>();
 
 export type PhotosAction = ActionType<typeof FETCH> | ActionType<typeof FETCHPHOTOS>;
-export type PhotosState = {
-  albumId: number;
-  id: number;
-  title: string;
-  url: string;
-  thumbnailUrl: string;
+export type State = {
+  result: { albumId: number; id: number; title: string; url: string; thumbnailUrl: string }[];
 };
 
-const initialize: PhotosState[] = [
-  {
-    albumId: 0,
-    id: 0,
-    title: "",
-    url: "",
-    thumbnailUrl: ""
-  }
-];
-const photosReducer = (state: PhotosState[] = initialize, action: PhotosAction) => {
+export type PhotosState = State & { isLoading: boolean; isSuccessed: boolean };
+
+const initialize: PhotosState = {
+  result: [
+    {
+      albumId: 0,
+      id: 0,
+      title: "",
+      url: "",
+      thumbnailUrl: ""
+    }
+  ],
+  isLoading: true,
+  isSuccessed: false
+};
+
+const photosReducer = (state: PhotosState = initialize, action: PhotosAction) => {
   switch (action.type) {
-    // case `${FETCH}_PENDING`:
-    //   return { ...state, isLoading: true, isSuccessed: false };
+    case `${FETCH}_PENDING`:
+      return { ...state, isLoading: true, isSuccessed: false };
     case `${FETCH}_FULFILLED`:
       const result = slice(shuffle(action.payload), 0, 5);
-      return result;
-    // case `${FETCH}_REJECTED`:
-    //   return { ...state, isLoading: false, isSuccessed: false };
+      return { result, isLoading: false, isSuccessed: true };
+    case `${FETCH}_REJECTED`:
+      return { ...state, isLoading: false, isSuccessed: false };
     default:
       return state;
   }
