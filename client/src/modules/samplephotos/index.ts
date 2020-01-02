@@ -1,23 +1,26 @@
-import { slice, shuffle } from "lodash";
-import { ActionType, createAction, createReducer, action } from "typesafe-actions";
+import { AxiosResponse } from "axios";
+import { createAsyncAction, ActionType, createReducer, action } from "typesafe-actions";
+import { shuffle, slice } from "lodash";
 
 export const PHOTOS_URL =
   "https://gist.githubusercontent.com/mironov/90943481802c227a1585cb979d73b261/raw/e5ffa6e7b8e160be478ef2d63b6212581930d2c1/photos.json";
 
-const FETCH = "photos/FETCH";
-// const FETCHACTION = createAction(FETCH).map(name=> ({payload: {name}));
-// export const FETCHPHOTOS = () => ({
-//   type: FETCH,
-//   payload: fetch(PHOTOS_URL, { cache: "no-cache" }).then(res => res.json())
-// });
-export const FETCHPHOTOS = createAction(FETCH)<Promise<any>>();
+const FETCH_PENDING = "photos/FETCH_PENDING";
+const FETCH_SUCCESS = "photos/FETCH_SUCCESS";
+const FETCH_FAILURE = "photos/FETCH_FAILURE";
 
-export type PhotosAction = ActionType<typeof FETCH> | ActionType<typeof FETCHPHOTOS>;
-export type State = {
+export const fetchPhotosAsync = createAsyncAction(FETCH_PENDING, FETCH_SUCCESS, FETCH_FAILURE)<
+  undefined,
+  AxiosResponse<any>,
+  undefined
+>();
+
+export type PhotosState = {
   result: { albumId: number; id: number; title: string; url: string; thumbnailUrl: string }[];
+  isLoading: boolean;
+  isSuccessed: boolean;
 };
-
-export type PhotosState = State & { isLoading: boolean; isSuccessed: boolean };
+export type PhotosAction = ActionType<typeof fetchPhotosAsync>;
 
 const initialize: PhotosState = {
   result: [
@@ -33,18 +36,14 @@ const initialize: PhotosState = {
   isSuccessed: false
 };
 
-const photosReducer = (state: PhotosState = initialize, action: PhotosAction) => {
-  switch (action.type) {
-    case `${FETCH}_PENDING`:
-      return { ...state, isLoading: true, isSuccessed: false };
-    case `${FETCH}_FULFILLED`:
-      const result = slice(shuffle(action.payload), 0, 5);
-      return { result, isLoading: false, isSuccessed: true };
-    case `${FETCH}_REJECTED`:
-      return { ...state, isLoading: false, isSuccessed: false };
-    default:
-      return state;
-  }
-};
+const photos = createReducer<PhotosState, PhotosAction>(initialize, {
+  [FETCH_PENDING]: (state, action) => ({ ...state, isLoading: true, isSuccessed: false }),
+  [FETCH_SUCCESS]: (state, action) => {
+    const result = slice(shuffle(action.payload.data), 0, 5);
 
-export default photosReducer;
+    return { result, isLoading: false, isSuccessed: true };
+  },
+  [FETCH_FAILURE]: state => ({ ...state, isLoading: false, isSuccessed: false })
+});
+
+export default photos;

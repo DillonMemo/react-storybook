@@ -1,10 +1,4 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { Button, Container, Row, Col } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { useNProgress } from "@tanem/react-nprogress";
-
-import { FETCHPHOTOS, PhotosState } from "../../../modules/samplephotos";
-import { RootState } from "../../../modules";
 import Progress from "./Proress";
 
 const callFakeAPI = (delay: number) =>

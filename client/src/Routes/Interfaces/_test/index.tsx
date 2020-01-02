@@ -4,6 +4,8 @@ import { Button, Dropdown } from "react-bootstrap";
 
 import { RootState } from "../../../modules";
 import { increase, decrease, increaseBy } from "../../../modules/counter";
+import Axios, { AxiosResponse } from "axios";
+import { getPostAsync } from "../../../modules/samplepost";
 
 /**
  * Custom Hooks
@@ -24,12 +26,47 @@ const useCounter = () => {
   };
 };
 
+const usePost = () => {
+  const post = useSelector((state: RootState) => state.post);
+  const dispatch = useDispatch();
+
+  const onRequest = useCallback(() => dispatch(getPostAsync.request()), [dispatch]);
+  const onSuccess = useCallback((res: AxiosResponse<any>) => dispatch(getPostAsync.success(res)), [
+    dispatch
+  ]);
+  const onFailure = useCallback(() => dispatch(getPostAsync.failure()), [dispatch]);
+
+  return {
+    post,
+    onRequest,
+    onSuccess,
+    onFailure
+  };
+};
+
 type TestProps = {};
 
 const Test: React.FC<TestProps> = ({}) => {
   const dispatch = useDispatch();
 
   const { count, onIncrease, onDecrease, onIncreaseBy } = useCounter();
+  const { post, onRequest, onSuccess, onFailure } = usePost();
+
+  const getPostAPI = (postId: number) => {
+    return Axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`);
+  };
+
+  useEffect(() => {
+    onRequest();
+
+    getPostAPI(count)
+      .then(response => {
+        onSuccess(response);
+      })
+      .catch(error => {
+        onFailure();
+      });
+  }, [count]);
 
   return (
     <div className={`p-3`}>
@@ -37,6 +74,9 @@ const Test: React.FC<TestProps> = ({}) => {
       <button onClick={onIncrease}>+1</button>
       <button onClick={onDecrease}>-1</button>
       <button onClick={() => onIncreaseBy(5)}>+5</button>
+
+      <p>{post.data.title}</p>
+      <p>{post.data.body}</p>
 
       <h2>Buttons</h2>
       <div className="p-1">

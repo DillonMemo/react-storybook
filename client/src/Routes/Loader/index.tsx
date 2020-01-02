@@ -3,22 +3,46 @@ import { useSelector, useDispatch } from "react-redux";
 import { Container, Row, Col, Card } from "react-bootstrap";
 
 import { RootState } from "../../modules";
-import { FETCHPHOTOS, PHOTOS_URL, PhotosState } from "../../modules/samplephotos";
+import { PHOTOS_URL, PhotosState, fetchPhotosAsync } from "../../modules/samplephotos";
 import Skeleton from "../Interfaces/skeleton/Skeleton";
 import Progress from "../Interfaces/nprogress/Proress";
+import axios, { AxiosResponse } from "axios";
+
+const usePhotos = () => {
+  const photos = useSelector((state: RootState) => state.photos);
+  const dispatch = useDispatch();
+
+  const onRequest = useCallback(() => dispatch(fetchPhotosAsync.request()), [dispatch]);
+  const onSuccess = useCallback(
+    (res: AxiosResponse<any>) => dispatch(fetchPhotosAsync.success(res)),
+    [dispatch]
+  );
+  const onFailure = useCallback(() => dispatch(fetchPhotosAsync.failure()), [dispatch]);
+
+  return {
+    photos,
+    onRequest,
+    onSuccess,
+    onFailure
+  };
+};
 
 export type LoaderProps = {};
 
 const Loader: React.FC<LoaderProps> = ({}) => {
-  const photos: PhotosState = useSelector((state: RootState) => state.photos);
-  const dispatch = useDispatch();
+  const { photos, onRequest, onSuccess, onFailure } = usePhotos();
 
   useMemo(() => {
-    const result: Promise<PhotosState> = fetch(PHOTOS_URL, { cache: "no-cache" }).then(res =>
-      res.json()
-    );
+    onRequest();
 
-    dispatch(FETCHPHOTOS(result));
+    axios
+      .get(PHOTOS_URL)
+      .then(response => {
+        onSuccess(response);
+      })
+      .catch(error => {
+        onFailure();
+      });
   }, []);
 
   return (
@@ -31,7 +55,6 @@ const Loader: React.FC<LoaderProps> = ({}) => {
         <span>Hello Loader</span>
       )}
       <Progress isAnimating={photos.isLoading} />
-      {console.log(photos.isLoading)}
       <Container style={{ marginTop: 20 }}>
         <Row>
           {photos.isLoading ? (

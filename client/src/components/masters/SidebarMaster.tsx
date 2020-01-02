@@ -48,6 +48,9 @@ const SidebarMaster: React.FunctionComponent = () => {
                   <li className="chapter">
                     <Link to={"/interfaces/skeleton"}>Skeleton</Link>
                   </li>
+                  <li className="chapter">
+                    <Link to={"/interfaces/snackbar"}>SnackBar</Link>
+                  </li>
                 </ul>
               </li>
               <li className="chapter" style={{ marginTop: 10 }}>
