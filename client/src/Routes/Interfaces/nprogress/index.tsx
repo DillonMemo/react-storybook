@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import Progress from "./Proress";
+import Progress from "./Progress";
 
 const callFakeAPI = (delay: number) =>
   new Promise(resolve => {

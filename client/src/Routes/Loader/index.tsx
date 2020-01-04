@@ -5,7 +5,7 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import { RootState } from "../../modules";
 import { PHOTOS_URL, PhotosState, fetchPhotosAsync } from "../../modules/samplephotos";
 import Skeleton from "../Interfaces/skeleton/Skeleton";
-import Progress from "../Interfaces/nprogress/Proress";
+import Progress from "../Interfaces/nprogress/Progress";
 import axios, { AxiosResponse } from "axios";
 
 const usePhotos = () => {
