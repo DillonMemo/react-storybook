@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AutoSizer, MultiGrid, GridCellProps } from "react-virtualized";
 import styled from "styled-components";
 import { FaAngleUp, FaAngleDown } from "react-icons/fa";
+import Faker from "faker";
 
 import { CSS } from "./";
 
@@ -40,6 +41,19 @@ const SortGridContainer: React.FC<SortGridContainerProps> = ({ gridStyles }) => 
       );
     }
   };
+
+  useEffect(() => {
+    console.log(dataCollection);
+
+    for (let i = 0; i < count.rowCount; i++) {
+      console.log(
+        Faker.name.title(),
+        Faker.name.jobTitle(),
+        Faker.name.jobType(),
+        Faker.name.jobDescriptor()
+      );
+    }
+  }, []);
 
   return (
     <>
