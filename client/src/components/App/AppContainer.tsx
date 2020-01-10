@@ -13,6 +13,7 @@ import BodyMaster from "../masters/BodyMaster";
 // Routes
 import Home from "../../routes/Home";
 import D3 from "../../routes/D3";
+import Virtualized from "../../routes/virtualized";
 import Test from "../../routes/Interfaces/_test";
 import NProgress from "../../routes/Interfaces/nprogress";
 import Skeleton from "../../routes/Interfaces/skeleton";
@@ -74,6 +75,7 @@ const Routes: React.FunctionComponent = () => (
   <Switch>
     <Route path={"/"} exact={true} component={Home} />
     <Route path={"/d3"} component={D3} />
+    <Route path={"/virtualized"} component={Virtualized} />
     <Route path={"/interfaces/_test"} component={Test} />
     <Route path={"/interfaces/nprogress"} component={NProgress} />
     <Route path={"/interfaces/skeleton"} component={Skeleton} />

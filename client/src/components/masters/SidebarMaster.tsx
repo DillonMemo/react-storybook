@@ -27,6 +27,9 @@ const SidebarMaster: React.FunctionComponent = () => {
                   <li className="chapter">
                     <Link to={"/d3"}>D3 Chart</Link>
                   </li>
+                  <li className="chapter">
+                    <Link to={"/virtualized"}>Virtualized</Link>
+                  </li>
                 </ul>
               </li>
               <li className="chapter" style={{ marginTop: 10 }}>
