@@ -3,10 +3,12 @@ import styled from "styled-components";
 
 import MultiGridContainer from "./MultiGridContainer";
 import SortGridContainer from "./SortGridContainer";
+import EditGridContainer from "./EditGridContainer";
 
 export type CSS = {
   STYLE: CSSProperties;
   STYLE_BOTTOM_LEFT_GRID: CSSProperties;
+  // STYLE_BOTTOM_RIGHT_GRID: CSSProperties;
   STYLE_TOP_LEFT_GRID: CSSProperties;
   STYLE_TOP_RIGHT_GRID: CSSProperties;
 };
@@ -39,11 +41,17 @@ const Virtualized: React.FC<VirtualizedProps> = ({}) => {
         </div>
         <MultiGridContainer gridStyles={gridStyle} />
       </SectionBlock>
-      <SectionBlock style={{ width: "50%" }}>
+      <SectionBlock style={{ width: "100%" }}>
         <div>
-          <b>Sort</b>
+          <b>Multi Grid Sort</b>
         </div>
         <SortGridContainer gridStyles={gridStyle} />
+      </SectionBlock>
+      <SectionBlock style={{ width: "100%" }}>
+        <div>
+          <b>Multi Grid Edit</b>
+        </div>
+        <EditGridContainer gridStyles={gridStyle} />
       </SectionBlock>
     </Block>
   );
