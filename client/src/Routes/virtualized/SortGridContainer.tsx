@@ -172,7 +172,7 @@ const SortGridContainer: React.FC<SortGridContainerProps> = ({ gridStyles }) => 
             enableFixedRowScroll={false}
             style={gridStyles.STYLE}
             styleBottomLeftGrid={gridStyles.STYLE_BOTTOM_LEFT_GRID}
-            // styleBottomRightGrid={gridStyles.STYLE_BOTTOM_RIGHT_GRID}
+            styleBottomRightGrid={gridStyles.STYLE_BOTTOM_RIGHT_GRID}
             styleTopLeftGrid={gridStyles.STYLE_TOP_LEFT_GRID}
             styleTopRightGrid={gridStyles.STYLE_TOP_RIGHT_GRID}
           />

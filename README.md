@@ -26,9 +26,10 @@
 - [x] Skeleton
 - [x] NProgress
 - [ ] Snackbar
-- [ ] Virtualized MultiGrid
-- [ ] Virtualized sorting
-- [ ] Virtualized responsive width
+- [x] Virtualized MultiGrid
+- [x] Virtualized sorting
+- [x] Virtualized Edit
+- [x] Virtualized responsive width
 
 ### Memo :
 

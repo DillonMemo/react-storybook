@@ -8,7 +8,7 @@ import EditGridContainer from "./EditGridContainer";
 export type CSS = {
   STYLE: CSSProperties;
   STYLE_BOTTOM_LEFT_GRID: CSSProperties;
-  // STYLE_BOTTOM_RIGHT_GRID: CSSProperties;
+  STYLE_BOTTOM_RIGHT_GRID: CSSProperties;
   STYLE_TOP_LEFT_GRID: CSSProperties;
   STYLE_TOP_RIGHT_GRID: CSSProperties;
 };
@@ -22,6 +22,9 @@ const Virtualized: React.FC<VirtualizedProps> = ({}) => {
     STYLE_BOTTOM_LEFT_GRID: {
       borderRight: "2px solid #aaa",
       backgroundColor: "#f7f7f7"
+    },
+    STYLE_BOTTOM_RIGHT_GRID: {
+      outline: "none"
     },
     STYLE_TOP_LEFT_GRID: {
       borderBottom: "2px solid #aaa",
