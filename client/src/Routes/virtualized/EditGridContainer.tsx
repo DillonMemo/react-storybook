@@ -15,6 +15,13 @@ const EditGridContainer: React.FC<EditGridContainerProps> = ({ gridStyles }) => 
   const [dataCollection, setDataCollection] = useState<{ rows: any[] }>({ rows: [] });
   const [editDatas, setEditDatas] = useState<typeof dataCollection.rows>(useMemo(() => [], []));
 
+  const [addData, setAddData] = useState(
+    useMemo(() => {
+      let objArr = (headerColumns as Column[]).map((data: Column) => ({ [data.dataKey]: "" }));
+      return objArr.reduce((a, b) => Object.assign(a, b));
+    }, [])
+  );
+
   /**
    * set a card to the edit card
    * @param rowData - row data
@@ -130,7 +137,7 @@ const EditGridContainer: React.FC<EditGridContainerProps> = ({ gridStyles }) => 
   };
 
   const cellRenderer = ({ columnIndex, rowIndex, key, style }: GridCellProps) => {
-    // console.log(dataCollection.rows[rowIndex][headerColumns[columnIndex].dataKey]);
+    console.log("cellRenderer");
     rowIndex = rowIndex - 1; // header column
     const { dataKey, label, width, options, type }: Column = headerColumns[columnIndex];
     const row = dataCollection.rows[rowIndex];
@@ -201,11 +208,56 @@ const EditGridContainer: React.FC<EditGridContainerProps> = ({ gridStyles }) => 
   };
 
   const actionRenderer = ({ columnIndex, rowIndex, key, style }: GridCellProps) => {
-    return (
-      <Block key={key} style={{ ...style, ...Cell }}>
-        {columnIndex}, {rowIndex}
-      </Block>
-    );
+    console.log("actionRenderer", addData);
+    const { dataKey, label, width, options, type }: Column = headerColumns[columnIndex];
+    const row = dataCollection.rows[rowIndex];
+
+    let content: JSX.Element;
+
+    if (options.editable) {
+      if (!type) {
+        content = (
+          <Block key={key} style={{ ...style, ...Cell }}>
+            <input
+              type="text"
+              style={{ width: "90%" }}
+              value={addData[dataKey]}
+              onChange={({ target }) => setAddData({ ...addData, [dataKey]: target.value })}
+            />
+          </Block>
+        );
+      } else if (type === "button") {
+        content = (
+          <Block key={key} style={{ ...style, ...Cell }}>
+            <input type="button" value="btn" />
+          </Block>
+        );
+      } else {
+        content = (
+          <Block key={key} style={{ ...style, ...Cell }}>
+            <input type="text" />
+          </Block>
+        );
+      }
+    } else {
+      if (dataKey === "editMode") {
+        content = (
+          <Block
+            className={`hover`}
+            key={key}
+            style={{ ...style, ...Cell }}
+            onClick={() => {
+              setCount({ ...count, rowCount: count.rowCount + 1 });
+              setDataCollection({ rows: [...dataCollection.rows, addData] });
+            }}>
+            <FaRegCheckCircle />
+          </Block>
+        );
+      } else {
+        content = <Block key={key} style={{ ...style, ...Cell }}></Block>;
+      }
+    }
+    return content;
   };
 
   useEffect(() => {
@@ -265,7 +317,7 @@ const EditGridContainer: React.FC<EditGridContainerProps> = ({ gridStyles }) => 
                 columnCount={count.columnCount}
                 rowHeight={50}
                 rowCount={1}
-                style={gridStyles.STYLE}
+                style={{ ...gridStyles.STYLE, outline: "none" }}
               />
             </form>
           </>
