@@ -30,6 +30,9 @@ const SidebarMaster: React.FunctionComponent = () => {
                   <li className="chapter">
                     <Link to={"/virtualized"}>Virtualized</Link>
                   </li>
+                  <li className="chapter">
+                    <Link to={"/tiny"}>TinyEditor</Link>
+                  </li>
                 </ul>
               </li>
               <li className="chapter" style={{ marginTop: 10 }}>

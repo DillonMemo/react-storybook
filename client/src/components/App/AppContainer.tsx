@@ -19,6 +19,7 @@ import NProgress from "../../routes/Interfaces/nprogress";
 import Skeleton from "../../routes/Interfaces/skeleton";
 import Loader from "../../routes/Loader";
 import SnackBar from "../../routes/Interfaces/snackbar";
+import Tiny from "../../routes/tiny";
 
 declare global {
   interface Window {
@@ -76,6 +77,7 @@ const Routes: React.FunctionComponent = () => (
     <Route path={"/"} exact={true} component={Home} />
     <Route path={"/d3"} component={D3} />
     <Route path={"/virtualized"} component={Virtualized} />
+    <Route path={"/tiny"} component={Tiny} />
     <Route path={"/interfaces/_test"} component={Test} />
     <Route path={"/interfaces/nprogress"} component={NProgress} />
     <Route path={"/interfaces/skeleton"} component={Skeleton} />
