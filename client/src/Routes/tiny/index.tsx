@@ -72,7 +72,8 @@ const TinyEditor: React.FC<TinyEditorProps> = ({}) => {
              bullist numlist outdent indent | removeformat | help a11ycheck preview | \
              image paste",
           paste_data_images: true, // 이미지 복붙
-          language: "sv_SE"
+          language_url: "https://dillonmemo.github.io/js/tinymce/ko_KR.js",
+          language: "ko_KR"
         }}
         onChange={e => handleEditorChange(e)}
       />
