@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
 export type TinyEditorProps = {};
@@ -71,7 +71,8 @@ const TinyEditor: React.FC<TinyEditorProps> = ({}) => {
              alignleft aligncenter alignright alignjustify | \
              bullist numlist outdent indent | removeformat | help a11ycheck preview | \
              image paste",
-          paste_data_images: true // 이미지 복붙
+          paste_data_images: true, // 이미지 복붙
+          language: "sv_SE"
         }}
         onChange={e => handleEditorChange(e)}
       />
