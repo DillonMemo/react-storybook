@@ -1,6 +1,6 @@
 # React Storybook
 
-여러가지 라이브러리, 알고리즘등 리액트 관련 학습겸 기록하는 저장소 입니다.
+여러가지 라이브러리, 인터페이스, 알고리즘등 리액트를 이용하여 기록하는 저장소 입니다.
 
 ## 기술 스택
 
@@ -16,6 +16,8 @@
 ### Libraries :
 
 - [x] D3 charts
+- [x] React Virtualized
+- [x] TinyMCE
 
 ### Components :
 
@@ -39,5 +41,6 @@
   - 해당 랜더링 이슈를 <b>React Virtualized</b>로 해결 가능 함.
 
 - Quill mark down editor 알아보기.
+- TinyMCE editor 알아보기.
 
 ---
