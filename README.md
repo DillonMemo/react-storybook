@@ -22,7 +22,9 @@
 ### Components :
 
 - [x] Input File button
-- [ ] 연관 키워드 검색 UI
+- [ ] radio button
+- [ ] Checkbox button
+- [ ] Search input
 - [ ] file(PDF, etc...) download
 - [ ] text editor tool (markdown 등등)
 - [x] Skeleton
@@ -32,6 +34,7 @@
 - [x] Virtualized sorting
 - [x] Virtualized Edit
 - [x] Virtualized responsive width
+- [ ] Virtualized MultiGrid + Fixed [Demo](https://commercetools.github.io/advanced-data-tables-demo/?selectedKind=Table&selectedStory=Full%20Example&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel)
 
 ### Memo :
 
