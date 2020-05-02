@@ -1,44 +1,39 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React Storybook
 
-## Available Scripts
+여러가지 라이브러리, 인터페이스, 알고리즘등 리액트를 이용하여 기록하는 저장소 입니다.
 
-In the project directory, you can run:
+## 기술 스택
 
-### `npm start`
+- ReactJS
+- Typescript
+- NodeJS
+- Third party libs
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+---
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Resolvers
 
-### `npm test`
+### Use Libraries :
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- D3 charts
+- React Virtualized
+- QuillJS (예정)
 
-### `npm run build`
+### Components :
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- [ ] base button
+- [ ] radio button
+- [ ] Checkbox button
+- [ ] Search input
+- [ ] text editor + tools
+- [ ] Skeleton
+- [ ] NProgress
+- [ ] Snackbar
+- [ ] Virtualized MultiGrid + Fixed [Example](https://commercetools.github.io/advanced-data-tables-demo/?selectedKind=Table&selectedStory=Full%20Example&full=0&down=1&left=1&panelRight=0&downPanel=kadirahq%2Fstorybook-addon-actions%2Factions-panel)
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+### Memo :
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Quill mark down editor 알아보기.
+- TinyMCE editor 알아보기.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
