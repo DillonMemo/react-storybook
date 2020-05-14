@@ -1,0 +1,29 @@
+{
+  "name": "storybook-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@emotion/core": "^10.0.28"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@storybook/addon-actions": "^5.3.18",
+    "@storybook/addon-docs": "^5.3.18",
+    "@storybook/addon-knobs": "^5.3.18",
+    "@storybook/addon-links": "^5.3.18",
+    "@storybook/addons": "^5.3.18",
+    "@storybook/react": "^5.3.18",
+    "babel-loader": "^8.1.0",
+    "babel-preset-react-app": "^9.1.2",
+    "react-docgen-typescript-loader": "^3.7.2",
+    "typescript": "^3.8.3"
+  }
+}
