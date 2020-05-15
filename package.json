@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "storybook": "start-storybook -p 6006",
+    "storybook": "start-storybook -p 6006 -s ./.storybook",
     "build-storybook": "build-storybook"
   },
   "keywords": [],
@@ -21,6 +21,7 @@
     "@storybook/addon-links": "^5.3.18",
     "@storybook/addons": "^5.3.18",
     "@storybook/react": "^5.3.18",
+    "@storybook/theming": "^5.3.18",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
     "react-docgen-typescript-loader": "^3.7.2",
