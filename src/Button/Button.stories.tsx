@@ -15,6 +15,14 @@ button.story = {
   name: "Default",
 };
 
+export const brandButton = () => {
+  return <Button theme="brand">BRAND</Button>;
+};
+
+brandButton.story = {
+  name: "Brand",
+};
+
 export const primaryButton = () => {
   return <Button theme="primary">PRIMARY</Button>;
 };

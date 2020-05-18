@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
 import Icons from "../Utils/svg";
+import { useState } from "react";
 
 export interface IconProps {
   /** `Icon` 컴포넌트의 내용 */
@@ -19,7 +20,7 @@ export interface IconProps {
 }
 
 /**
- * Icon 컴포넌트 목록 입니다.
+ * Icon 컴포넌트 목록 이며, 모든 Icon은 SVG를 사용 합니다.
  *
  * - `name` props로 필요한 *아이콘*을 지정 할 수 있습니다.
  * - `color` props로 *아이콘*의 *색상*을 변경 할 수 있습니다.
@@ -34,7 +35,9 @@ const Icon: React.FC<IconProps> = ({
   size = 16,
   fill,
 }) => {
+  const [copied, setCopied] = useState<string>("");
   const DrawIcon = Icons[name];
+
   return (
     <div css={List}>
       <div className="item">

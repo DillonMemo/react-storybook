@@ -1,7 +1,9 @@
 /** @jsx jsx */
 import Map from "./Map";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { jsx, css } from "@emotion/core";
+import Axios from "axios";
+import Icons from "../Utils/svg";
 
 declare global {
   interface Window {
@@ -14,7 +16,26 @@ export default {
   component: Map,
 };
 
+export type SearchType = {
+  address_name: string;
+  category_group_code: string;
+  category_group_name: string;
+  category_name: string;
+  distance: string;
+  id: string;
+  phone: string;
+  place_name: string;
+  place_url: string;
+  road_address_name: string;
+  x: string;
+  y: string;
+};
+
 export const Kakao = () => {
+  const [keyword, setKeyword] = useState<string>("");
+  const [searchData, setSearchData] = useState<SearchType[]>();
+  const DrawIcon = Icons["Search"];
+
   useEffect(() => {
     const kakaoScript = document.createElement("script");
     kakaoScript.async = true;
@@ -58,8 +79,87 @@ export const Kakao = () => {
       });
     };
   }, []);
+
+  const handleSearchChange = async (query: string): Promise<void> => {
+    setKeyword(query);
+    const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${query}`;
+
+    if (query) {
+      const data: SearchType[] = await Axios({
+        method: "GET",
+        url,
+        headers: {
+          Authorization: "KakaoAK d96ff2a8efb355716d764d1be22bdb6f",
+        },
+      })
+        .then((res) => res.data.documents)
+        .catch((error) => console.error(error));
+
+      if (data.length > 0) {
+        document
+          .getElementsByClassName("divider")[0]
+          .classList.add("searching");
+        console.log(data);
+        setSearchData(data);
+      } else {
+        document
+          .getElementsByClassName("divider")[0]
+          .classList.remove("searching");
+      }
+    } else {
+      document
+        .getElementsByClassName("divider")[0]
+        .classList.remove("searching");
+    }
+  };
+
+  (window as any).searchData = searchData;
+
   return (
     <div>
+      <div css={SearchContents}>
+        <div className="search">
+          <div className="input">
+            <input
+              type="text"
+              value={keyword}
+              placeholder="Search"
+              onFocus={() => {
+                document
+                  .getElementsByClassName("search")[0]
+                  ?.classList.add("focused");
+
+                document
+                  .getElementsByClassName("divider")[0]
+                  .classList.add("focused");
+              }}
+              onBlur={() => {
+                document
+                  .getElementsByClassName("search")[0]
+                  ?.classList.remove("focused");
+
+                document
+                  .getElementsByClassName("divider")[0]
+                  .classList.remove("focused");
+              }}
+              onChange={({ target: { value: Value } }) =>
+                handleSearchChange(Value)
+              }
+            />
+          </div>
+          <span className="icon right">
+            <DrawIcon size={21} />
+          </span>
+        </div>
+        <div className="divider"></div>
+        <div className="search-list">
+          <ul>
+            {searchData &&
+              searchData.length > 0 &&
+              searchData.map((data) => <li>{data.place_name}</li>)}
+          </ul>
+        </div>
+      </div>
       <div id="kakaoMap" css={MapContents} />
       <div css={FormGroup}>
         <button id="zoomDisable">지도 확대/축소 끄기</button>
@@ -72,6 +172,97 @@ export const Kakao = () => {
 Kakao.story = {
   name: "kakao",
 };
+
+const SearchContents = css`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 250px;
+
+  margin-bottom: 1rem;
+  .search {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: initial;
+    height: calc(9 * 4px);
+    transition: border 0.2s ease 0s, color 0.2s ease 0s;
+
+    border-top: 1px solid #ffccbf;
+    border-left: 1px solid #ffccbf;
+    border-right: 1px solid #ffccbf;
+
+    &.focused {
+      box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
+      border-top: 1px solid #fe5127;
+      border-left: 1px solid #fe5127;
+      border-right: 1px solid #fe5127;
+      color: black;
+    }
+
+    & > div.input {
+      display: block;
+      position: relative;
+      width: 100%;
+      margin: 5px 10px;
+
+      input[type="text"] {
+        box-shadow: none;
+        box-sizing: border-box;
+        display: block;
+        font-family: Inter;
+        font-size: 14px;
+        line-height: 26px;
+        width: 100%;
+        color: #000;
+        text-overflow: ellipsis;
+        border-radius: 0px;
+        border-width: initial;
+        border-style: none;
+        border-color: initial;
+        padding: 0;
+        outline: none;
+      }
+    }
+
+    & > .icon.right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.5rem;
+    }
+  }
+
+  .divider {
+    border-top: 1px solid #ffccbf;
+    position: relative;
+    transition: margin 0.2s ease 0s;
+
+    &.focused {
+      border-top: 1px solid #fe5127;
+      color: black;
+
+      &.searching {
+        margin: 0 20px 0 14px;
+      }
+    }
+  }
+
+  .search-list {
+    position: absolute;
+    background: white;
+    z-index: 2;
+    top: 38px;
+    width: 100%;
+
+    > ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+  }
+`;
 
 const MapContents = css`
   width: 100%;

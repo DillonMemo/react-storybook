@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
+import reactElementToJSXString from "react-element-to-jsx-string";
 
 interface IconProps {
   color?: string;
@@ -7,27 +8,29 @@ interface IconProps {
   fill?: string;
 }
 
-const Activity: React.FC<IconProps> = ({ color, size, fill }) => (
-  <svg
-    aria-hidden="true"
-    focusable="false"
-    width={size}
-    height={size}
-    css={style}
-    preserveAspectRatio="xMidYMid meet"
-    viewBox="0 0 32 32"
-  >
-    <g
-      fill={fill || "none"}
-      stroke={color}
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
+const Activity: React.FC<IconProps> = ({ color, size, fill }) => {
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      width={size}
+      height={size}
+      css={style}
+      preserveAspectRatio="xMidYMid meet"
+      viewBox="0 0 32 32"
     >
-      <path d="M4 16h7l3 13l4-26l3 13h7" />
-    </g>
-  </svg>
-);
+      <g
+        fill={fill || "none"}
+        stroke={color}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      >
+        <path d="M4 16h7l3 13l4-26l3 13h7" />
+      </g>
+    </svg>
+  );
+};
 
 const Airplay: React.FC<IconProps> = ({ color, size, fill }) => (
   <svg
@@ -64,16 +67,16 @@ const AlertCircle: React.FC<IconProps> = ({ color, size, fill }) => (
       d="M448 256c0-106-86-192-192-192S64 150 64 256s86 192 192 192s192-86 192-192z"
       fill={fill || "none"}
       stroke={color}
-      stroke-miterlimit="10"
-      stroke-width="32"
+      strokeMiterlimit="10"
+      strokeWidth="32"
     />
     <path
       d="M250.26 166.05L256 288l5.73-121.95a5.74 5.74 0 0 0-5.79-6h0a5.74 5.74 0 0 0-5.68 6z"
       fill={fill || "none"}
       stroke={color}
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="32"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="32"
     />
     <path d="M256 367.91a20 20 0 1 1 20-20a20 20 0 0 1-20 20z" fill={color} />
   </svg>
@@ -85,10 +88,10 @@ const AlertCircleFill: React.FC<IconProps> = ({ color, size, fill }) => (
     width={size}
     height={size}
     stroke={color}
-    stroke-width="1.5"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-    shape-rendering="geometricPrecision"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    shapeRendering="geometricPrecision"
     css={style}
   >
     <circle cx="12" cy="12" r="10" fill={fill} />

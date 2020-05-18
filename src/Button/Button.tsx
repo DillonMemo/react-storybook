@@ -9,6 +9,7 @@ export interface ButtonProps {
   /** 버튼의 생김새를 설정 합니다. */
   theme?:
     | "default"
+    | "brand"
     | "primary"
     | "secondary"
     | "tertiary"
@@ -63,6 +64,16 @@ const themes = {
     }
     &:active {
       background: #1f1f1f;
+    }
+  `,
+  brand: css`
+    background: #fe5127;
+    color: white;
+    &:hover {
+      background: #ff6f4c;
+    }
+    &:active {
+      background: #f24d25;
     }
   `,
   primary: css`

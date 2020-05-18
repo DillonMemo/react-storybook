@@ -22,9 +22,12 @@
     "@storybook/addons": "^5.3.18",
     "@storybook/react": "^5.3.18",
     "@storybook/theming": "^5.3.18",
+    "@types/axios": "^0.14.0",
+    "axios": "^0.19.2",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
     "react-docgen-typescript-loader": "^3.7.2",
+    "react-element-to-jsx-string": "^14.3.1",
     "typescript": "^3.8.3"
   }
 }
