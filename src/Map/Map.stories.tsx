@@ -99,7 +99,7 @@ export const Kakao = () => {
         document
           .getElementsByClassName("divider")[0]
           .classList.add("searching");
-        console.log(data);
+
         setSearchData(data);
       } else {
         document
@@ -110,6 +110,8 @@ export const Kakao = () => {
       document
         .getElementsByClassName("divider")[0]
         .classList.remove("searching");
+
+      setSearchData([]);
     }
   };
 
@@ -125,22 +127,36 @@ export const Kakao = () => {
               value={keyword}
               placeholder="Search"
               onFocus={() => {
+                // 검색 입력 박스 포커싱
                 document
                   .getElementsByClassName("search")[0]
                   ?.classList.add("focused");
 
+                // 검색 입력 박스 포커싱
                 document
                   .getElementsByClassName("divider")[0]
                   .classList.add("focused");
+
+                // 검색 결과 리스트 숨김
+                document
+                  .getElementsByClassName("search-list")[0]
+                  .classList.remove("hide");
               }}
               onBlur={() => {
+                // 검색 입력 박스 포커싱 해제
                 document
                   .getElementsByClassName("search")[0]
                   ?.classList.remove("focused");
 
+                // 검색 입력 박스 포커싱 해제
                 document
                   .getElementsByClassName("divider")[0]
                   .classList.remove("focused");
+
+                // 검색 결과 리스트 표시
+                document
+                  .getElementsByClassName("search-list")[0]
+                  .classList.add("hide");
               }}
               onChange={({ target: { value: Value } }) =>
                 handleSearchChange(Value)
@@ -156,7 +172,9 @@ export const Kakao = () => {
           <ul>
             {searchData &&
               searchData.length > 0 &&
-              searchData.map((data) => <li>{data.place_name}</li>)}
+              searchData.map((data, index) => (
+                <li key={`li-${index}`}>{data.place_name}</li>
+              ))}
           </ul>
         </div>
       </div>
@@ -255,11 +273,28 @@ const SearchContents = css`
     z-index: 2;
     top: 38px;
     width: 100%;
+    box-shadow: 0 4px 6px 0 rgba(32, 33, 36, 0.28);
 
     > ul {
       margin: 0;
       padding: 0;
       list-style-type: none;
+      border: 1px solid #ddd;
+
+      > li {
+        cursor: pointer;
+        line-height: 2rem;
+        padding-left: 10px;
+
+        &:hover {
+          background: #eee;
+        }
+      }
+    }
+
+    &.hide {
+      opacity: 0;
+      visibility: hidden;
     }
   }
 `;

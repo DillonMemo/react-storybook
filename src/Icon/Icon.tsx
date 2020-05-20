@@ -32,7 +32,7 @@ const Icon: React.FC<IconProps> = ({
   children,
   name,
   color = "black",
-  size = 16,
+  size = 24,
   fill,
 }) => {
   const [copied, setCopied] = useState<string>("");

@@ -9,12 +9,8 @@ export default {
 
 export const Default = () => {
   return (
-    <div css={Container}>
+    <div>
       <Icon name="Activity" size={24} />
-      <Icon name="Airplay" size={24} />
-      <Icon name="AlertCircle" size={24} />
-      <Icon name="AlertCircleFill" size={24} color="white" />
-      <Icon name="Search" size={24} />
     </div>
   );
 };
@@ -38,11 +34,3 @@ export const Size = () => {
 Size.story = {
   name: "Size",
 };
-
-const Container = css`
-  display: flex;
-  flex-wrap: wrap;
-  box-sizing: border-box;
-  justify-content: center;
-  align-items: center;
-`;

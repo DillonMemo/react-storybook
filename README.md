@@ -4,13 +4,11 @@
 
 ## Style Guide
 
-> 준비 예정
-
-- 색상
-- 아이콘
-- 여백 (margin)
-- 패딩 (padding)
-- 타이포그라피 (typography)
+- [ ] 색상
+- [ ] 아이콘
+- [ ] 여백 (margin)
+- [ ] 패딩 (padding)
+- [ ] 타이포그라피 (typography)
 
 ## Component Library
 
