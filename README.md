@@ -28,7 +28,7 @@
 - [ ] Feedback
 - [ ] Fieldset
 - [ ] File Tree
-- [ ] Icon
+- [x] Icon
 - [ ] Input
 - [ ] Keyboard Input
 - [ ] Loading Dots

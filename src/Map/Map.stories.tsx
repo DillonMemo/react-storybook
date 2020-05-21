@@ -51,7 +51,7 @@ export const Kakao = () => {
         let container = document.getElementById("kakaoMap");
         let options = {
           center: new kakao.maps.LatLng(lat, lng),
-          level: 9,
+          level: 5,
         };
 
         const map = new window.kakao.maps.Map(container, options);
@@ -60,7 +60,8 @@ export const Kakao = () => {
         const mapTypeControl = new kakao.maps.MapTypeControl();
         const zoomControl = new kakao.maps.ZoomControl();
         map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+        // map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+        map.setZoomable(false);
 
         // 지도 확대, 축소 기능 끄기
         const zoomDisable = document.getElementById("zoomDisable");
@@ -142,7 +143,7 @@ export const Kakao = () => {
                   .getElementsByClassName("search-list")[0]
                   .classList.remove("hide");
               }}
-              onBlur={() => {
+              onBlur={(e) => {
                 // 검색 입력 박스 포커싱 해제
                 document
                   .getElementsByClassName("search")[0]
@@ -154,9 +155,9 @@ export const Kakao = () => {
                   .classList.remove("focused");
 
                 // 검색 결과 리스트 표시
-                document
-                  .getElementsByClassName("search-list")[0]
-                  .classList.add("hide");
+                // document
+                //   .getElementsByClassName("search-list")[0]
+                //   .classList.add("hide");
               }}
               onChange={({ target: { value: Value } }) =>
                 handleSearchChange(Value)
@@ -173,7 +174,18 @@ export const Kakao = () => {
             {searchData &&
               searchData.length > 0 &&
               searchData.map((data, index) => (
-                <li key={`li-${index}`}>{data.place_name}</li>
+                <li
+                  key={`li-${index}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log("handleClick", data);
+                    document
+                      .getElementsByClassName("search-list")[0]
+                      .classList.add("hide");
+                  }}
+                >
+                  {data.place_name}
+                </li>
               ))}
           </ul>
         </div>
@@ -182,6 +194,11 @@ export const Kakao = () => {
       <div css={FormGroup}>
         <button id="zoomDisable">지도 확대/축소 끄기</button>
         <button id="zoomEnable">지도 확대/축소 켜기</button>
+      </div>
+
+      <div>
+        <span>Autocomplete Demo</span>
+        <div className="search-container"></div>
       </div>
     </div>
   );
@@ -195,7 +212,7 @@ const SearchContents = css`
   display: flex;
   flex-direction: column;
   position: relative;
-  width: 250px;
+  width: 300px;
 
   margin-bottom: 1rem;
   .search {
@@ -286,7 +303,7 @@ const SearchContents = css`
         line-height: 2rem;
         padding-left: 10px;
 
-        &:hover {
+        &.hover {
           background: #eee;
         }
       }

@@ -27,6 +27,7 @@
     "axios": "^0.19.2",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
+    "dom-scroll-into-view": "^2.0.1",
     "react-copy-to-clipboard": "^5.0.2",
     "react-docgen-typescript-loader": "^3.7.2",
     "react-element-to-jsx-string": "^14.3.1",
