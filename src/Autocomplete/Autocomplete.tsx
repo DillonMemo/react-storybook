@@ -1,93 +1,69 @@
 /** @jsx jsx */
 import { jsx, css } from "@emotion/core";
-import { useState, useMemo, useRef, Fragment } from "react";
-
-type testType = {
-  abbr: string;
-  name: string;
-};
+import { useState, useRef, Fragment } from "react";
 
 const acceptedKeys = [38, 40, 13, 27];
-const test: testType[] = [
-  { abbr: "AL", name: "Alabama" },
-  { abbr: "AK", name: "Alaska" },
-  { abbr: "AZ", name: "Arizona" },
-  { abbr: "AR", name: "Arkansas" },
-  { abbr: "CA", name: "California" },
-  { abbr: "CO", name: "Colorado" },
-  { abbr: "CT", name: "Connecticut" },
-  { abbr: "DE", name: "Delaware" },
-  { abbr: "FL", name: "Florida" },
-  { abbr: "GA", name: "Georgia" },
-  { abbr: "HI", name: "Hawaii" },
-  { abbr: "ID", name: "Idaho" },
-  { abbr: "IL", name: "Illinois" },
-  { abbr: "IN", name: "Indiana" },
-  { abbr: "IA", name: "Iowa" },
-  { abbr: "KS", name: "Kansas" },
-  { abbr: "KY", name: "Kentucky" },
-  { abbr: "LA", name: "Louisiana" },
-  { abbr: "ME", name: "Maine" },
-  { abbr: "MD", name: "Maryland" },
-  { abbr: "MA", name: "Massachusetts" },
-  { abbr: "MI", name: "Michigan" },
-  { abbr: "MN", name: "Minnesota" },
-  { abbr: "MS", name: "Mississippi" },
-  { abbr: "MO", name: "Missouri" },
-  { abbr: "MT", name: "Montana" },
-  { abbr: "NE", name: "Nebraska" },
-  { abbr: "NV", name: "Nevada" },
-  { abbr: "NH", name: "New Hampshire" },
-  { abbr: "NJ", name: "New Jersey" },
-  { abbr: "NM", name: "New Mexico" },
-  { abbr: "NY", name: "New York" },
-  { abbr: "NC", name: "North Carolina" },
-  { abbr: "ND", name: "North Dakota" },
-  { abbr: "OH", name: "Ohio" },
-  { abbr: "OK", name: "Oklahoma" },
-  { abbr: "OR", name: "Oregon" },
-  { abbr: "PA", name: "Pennsylvania" },
-  { abbr: "RI", name: "Rhode Island" },
-  { abbr: "SC", name: "South Carolina" },
-  { abbr: "SD", name: "South Dakota" },
-  { abbr: "TN", name: "Tennessee" },
-  { abbr: "TX", name: "Texas" },
-  { abbr: "UT", name: "Utah" },
-  { abbr: "VT", name: "Vermont" },
-  { abbr: "VA", name: "Virginia" },
-  { abbr: "WA", name: "Washington" },
-  { abbr: "WV", name: "West Virginia" },
-  { abbr: "WI", name: "Wisconsin" },
-  { abbr: "WY", name: "Wyoming" },
-];
 
-interface AutocompleteProps {}
+interface AutocompleteProps {
+  /**
+   * **disable** 설정 여부를 정합니다.
+   */
+  isDisabled?: boolean;
+  /**
+   * **error** mode 설정 여부를 정합니다.
+   */
+  isError?: boolean;
+  /**
+   * 사용자가 입력 값을 변경할 때마다 호출 됩니다.
+   */
+  onChange?: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    value?: string
+  ) => void | any;
+  /**
+   * 사용자가 `Dropdown`메뉴에서 항목을 선택할 때 호출 됩니다.
+   */
+  onSelect?: (value: string, item?: any) => void;
+  /**
+   * `Dropdown` menu에 표시 할 옵션항목
+   */
+  options: any[];
+  /**
+   * 입력 필드에 표시 될 값을 가져옵니다.
+   */
+  value: string;
+}
 
-const Autocomplete: React.FC<AutocompleteProps> = () => {
+const Autocomplete: React.FC<AutocompleteProps> = ({
+  options,
+  onChange = () => {},
+  onSelect = () => {},
+  isDisabled = false,
+  isError = false,
+  value = "",
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState<number | null>(null);
-  const [value, setValue] = useState<string>("");
   const [suggestions, setSuggestions] = useState<{
-    loading: boolean;
+    // loading: boolean;
     status: boolean;
-    data: testType[];
-  }>({ loading: false, status: false, data: [] });
+    data: any[];
+  }>({ /*loading: false,*/ status: false, data: [] });
 
   const dismissSuggestions = (): void => {
     setCurrentIndex(null);
-    setSuggestions({ loading: false, status: false, data: [] });
+    setSuggestions({ /*loading: false,*/ status: false, data: [] });
   };
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setValue(e.target.value);
+    onChange(e, e.target.value);
 
-    if (!e.target.value) console.log(!e.target.value);
-
-    let data = test
+    let data = options
       .filter(
-        (item) =>
-          item.name.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
+        (option) =>
+          option.label.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
             -1 ||
-          item.abbr.toLowerCase().indexOf(e.target.value.toLowerCase()) !== -1
+          option.value.toLowerCase().indexOf(e.target.value.toLowerCase()) !==
+            -1
       )
       .splice(0, 5);
 
@@ -97,8 +73,8 @@ const Autocomplete: React.FC<AutocompleteProps> = () => {
     else setSuggestions({ ...suggestions, status: false, data });
   };
 
-  const handleSelect = ({ name }: testType) => (): void => {
-    setValue(name);
+  const handleSelect = ({ label }: any) => (): void => {
+    onSelect(label);
     dismissSuggestions();
   };
 
@@ -118,7 +94,7 @@ const Autocomplete: React.FC<AutocompleteProps> = () => {
     // 엔터키가 입력 됬을 경우
     if (e.keyCode === 13 || e.keyCode === 27) {
       if (currentIndex !== null)
-        setValue(data[currentIndex] ? data[currentIndex].name : "");
+        onSelect(data[currentIndex] ? data[currentIndex].label : "");
       dismissSuggestions();
       return;
     }
@@ -135,23 +111,20 @@ const Autocomplete: React.FC<AutocompleteProps> = () => {
       nextIndex = nextIndex < data.length - 1 ? nextIndex + 1 : null;
     }
 
-    console.log("handleKeyDown :", nextIndex);
     setCurrentIndex(nextIndex);
   };
 
   const renderSuggestions = (): JSX.Element => {
     const { data } = suggestions;
 
-    console.log("renderSuggestions :", data);
-
     const suggestCollect = data
       .filter(
         (item) =>
-          item.name.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
-          item.abbr.toLowerCase().indexOf(value.toLowerCase()) !== -1
+          item.label.toLowerCase().indexOf(value.toLowerCase()) !== -1 ||
+          item.value.toLowerCase().indexOf(value.toLowerCase()) !== -1
       )
       .map((suggestion, index: number) => {
-        const { abbr, name } = suggestion;
+        const { value, label } = suggestion;
 
         return (
           <li
@@ -163,8 +136,8 @@ const Autocomplete: React.FC<AutocompleteProps> = () => {
             role="option"
             aria-selected={index === currentIndex}
           >
-            <strong>{name}</strong>
-            <small css={subText}>{abbr}</small>
+            <strong>{label}</strong>
+            <small css={subText}>{value}</small>
           </li>
         );
       });
@@ -173,7 +146,6 @@ const Autocomplete: React.FC<AutocompleteProps> = () => {
 
   return (
     <div css={container}>
-      <span>Fuxx Autocomplete!!</span>
       <div
         css={autocomplete}
         ref={ref}
@@ -183,11 +155,15 @@ const Autocomplete: React.FC<AutocompleteProps> = () => {
         aria-expanded={suggestions.status}
       >
         <input
-          css={suggestions.status ? [input, inputNoBottomRadius] : input}
+          css={
+            suggestions.status
+              ? [input, inputNoBottomRadius, isError ? inputError : null]
+              : [input, isError ? inputError : null]
+          }
           value={value}
           onChange={handleInput}
           onKeyDown={handleKeyDown}
-          disabled={false}
+          disabled={isDisabled}
           placeholder="Search"
           type="text"
           aria-autocomplete="list"
@@ -264,6 +240,11 @@ const input = css`
   ${sm} {
     width: 20rem;
   }
+`;
+
+const inputError = css`
+  border: 1px solid red;
+  color: red;
 `;
 
 const inputNoBottomRadius = css`
