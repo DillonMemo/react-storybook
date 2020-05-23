@@ -1,30 +1,13 @@
 /** @jsx jsx */
 import Map from "./Map";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, Fragment } from "react";
 import { jsx, css } from "@emotion/core";
 import Axios from "axios";
 
 import Icons from "../Utils/svg";
+import useAutocomplete, { SearchType } from "./useAutocomplete";
+import Autocomplete from "../Autocomplete/Autocomplete";
 
-// const url = `https://dapi.kakao.com/v2/local/search/keyword.json?query=${query}`;
-
-//             if (query) {
-//               const data: SearchType[] = await Axios({
-//                 method: "GET",
-//                 url,
-//                 headers: {
-//                   Authorization: "KakaoAK d96ff2a8efb355716d764d1be22bdb6f",
-//                 },
-//               })
-//                 .then((res) => res.data.documents)
-//                 .catch((error) => console.log(error));
-
-//               if (data.length > 0) {
-//                 setSearchData(data);
-//               }
-//             } else {
-//               setSearchData([]);
-//             }
 declare global {
   interface Window {
     kakao: any;
@@ -36,24 +19,18 @@ export default {
   component: Map,
 };
 
-export type SearchType = {
-  address_name: string;
-  category_group_code: string;
-  category_group_name: string;
-  category_name: string;
-  distance: string;
-  id: string;
-  phone: string;
-  place_name: string;
-  place_url: string;
-  road_address_name: string;
-  x: string;
-  y: string;
-  value: string;
-  label: string;
-};
+let cachedVal = "";
+const acceptedKeys = [38, 40, 13, 27];
 
 export const Kakao = () => {
+  const {
+    ready,
+    value: val,
+    suggestions: { status, data },
+    setVal,
+    clearSuggestions,
+  } = useAutocomplete();
+
   useEffect(() => {
     const kakaoScript = document.createElement("script");
     kakaoScript.async = true;
@@ -103,14 +80,14 @@ export const Kakao = () => {
     <div>
       <div css={container}>
         <span>Autocomplete Demo</span>
-        <div
-          css={autocomplete}
-          role="combobox"
-          aria-owns="ex-list-box"
-          aria-haspopup="listbox"
-          // aria-expanded={suggestions.status}
-          aria-expanded={true}
-        ></div>
+        <Autocomplete
+          value={val}
+          onChange={setVal}
+          status={status}
+          ready={ready}
+          items={data}
+          clearSuggestions={clearSuggestions}
+        />
       </div>
       <div id="kakaoMap" css={MapContents} />
       <div css={FormGroup}>
@@ -162,7 +139,7 @@ const container = css`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 5% 5rem 5%;
+  padding: 1.5rem 5%;
 
   ${sm} {
     padding-left: 10%;
@@ -228,6 +205,10 @@ const listBox = css`
   border-bottom-right-radius: 8px;
   list-style-type: none;
   text-align: left;
+
+  /** add */
+  background-color: #fff;
+  z-index: 2;
 `;
 
 const listItem = css`

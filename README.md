@@ -12,7 +12,7 @@
 
 ## Component Library
 
-- [ ] Autocomplete
+- [x] Autocomplete
 - [ ] Avatar
 - [ ] Badge
 - [x] Button
