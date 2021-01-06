@@ -24,7 +24,7 @@
     "@storybook/theming": "^5.3.18",
     "@types/axios": "^0.14.0",
     "@types/react-copy-to-clipboard": "^4.3.0",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-loader": "^8.1.0",
     "babel-preset-react-app": "^9.1.2",
     "dom-scroll-into-view": "^2.0.1",
